@@ -16,10 +16,8 @@ def it_has_been_written(val, stat, character, base)
   case stat
   when "str"
     character.getStats().setStr(myValue);
-    puts "set Strength"
   when "con"
     character.getStats().setCon(myValue);
-    puts
   when "dex"
     character.getStats().setDex(myValue);
   when "agi"
@@ -169,29 +167,45 @@ def NavigationPanel(content)
   Tk::Tile::Label.new(navigation) { text 'Progression' }.grid(:column => 7, :row => 1, :sticky => 'ew')
 end
 
-def StatsChoosePanel(content, prof, race)
+def change_profession(chosenProf, character, prof, race, content)
+  character.setProfession(prof.getProfessionObjectFromDatabase(chosenProf.value))
+  Tk.destroy
+  StatsBasePanel(content, character)
+end
+
+def change_race(chosenRace, character, prof, race, content)
+  character.setRace(race.getRaceObjectFromDatabase(chosenRace.value))
+  StatsBasePanel(content, character)
+end
+
+def StatsChoosePanel(content, character, prof, race)
   chooser = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 1, :row => 2, :sticky => "ew")
-  chosenProf = TkVariable.new("Ranger")
-  chosenRace = TkVariable.new("Human")
+  chosenProf = TkVariable.new(character.getProfession()['name'])
+  chosenRace = TkVariable.new(character.getRace()['name'])
+
   c = Tk::Tile::Combobox.new(chooser) { textvariable chosenProf }.grid(:column => 2, :row => 2)
   c.values = prof.getProfessionList()
+  c.bind( "<ComboboxSelected>", proc { change_profession(chosenProf, character, prof, race, content) })
 
   r = Tk::Tile::Combobox.new(chooser) { textvariable chosenRace }.grid(:column => 3, :row => 2)
   r.values = race.getRaceList()
+  r.bind( "<ComboboxSelected>", proc {change_race(chosenRace, character, prof, race, content)})
 end
 
 def StatsPanel(character, profession, race)
-  root = TkRoot.new { title "GS4 Character Planner" }
+  root = TkRoot.new { title "GS4 Character Planner - #{character.getName()}" }
 
   content = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:sticky => 'nsew')
+
   TkGrid.columnconfigure root, 0, :weight => 1; TkGrid.rowconfigure root, 0, :weight => 1
   Tk::Tile::Style.configure('Danger.TFrame', "background" => "red")
   NavigationPanel(content)
-  StatsChoosePanel(content, profession, race)
+  StatsChoosePanel(content, character, profession, race)
   StatsBasePanel(content, character)
   StatsGrowthPanel(content)
   StatsTrainingPanel(content)
   Tk.mainloop
+
 end
 
 race = Race.new
@@ -202,6 +216,6 @@ character.setName('Llyran')
 character.setProfession(profession.getProfessionObjectFromDatabase('Warrior'))
 character.setRace(race.getRaceObjectFromDatabase('Human'))
 
-puts character.inspect
+
 StatsPanel(character, profession, race)
 puts character.inspect
