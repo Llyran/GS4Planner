@@ -5,45 +5,45 @@ require "./lib/classes/Race"
 require "./lib/classes/Profession"
 require "./lib/classes/Character"
 
-def check_num(newval)
-  return /^[ 0-9]*$/.match(newval) && newval.length <= 3
+def check_num(new_val)
+  /^[ 0-9]*$/.match(new_val) && new_val.length <= 3
 end
 
 def it_has_been_written(val, stat, character, base)
   # Dereference the pointer with #{}
-  myValue = "#{val}".to_i
+  my_value = "#{val}".to_i
 
   case stat
   when "str"
-    character.getStats().setStr(myValue);
+    character.getStats.setStr(my_value);
   when "con"
-    character.getStats().setCon(myValue);
+    character.getStats.setCon(my_value);
   when "dex"
-    character.getStats().setDex(myValue);
+    character.getStats.setDex(my_value);
   when "agi"
-    character.getStats().setAgi(myValue);
+    character.getStats.setAgi(my_value);
   when "dis"
-    character.getStats().setDis(myValue);
+    character.getStats.setDis(my_value);
   when "aur"
-    character.getStats().setAur(myValue);
+    character.getStats.setAur(my_value);
   when "log"
-    character.getStats().setLog(myValue);
+    character.getStats.setLog(my_value);
   when "int"
-    character.getStats().setInt(myValue);
+    character.getStats.setInt(my_value);
   when "wis"
-    character.getStats().setWis(myValue);
+    character.getStats.setWis(my_value);
   when "inf"
-    character.getStats().setInf(myValue);
+    character.getStats.setInf(my_value);
   end
 
   # todo: Probably a hack.. should be a better way to do this
-  Tk::Tile::Label.new(base) { text character.getStats().getStatTotal() }.grid(:column => 4, :row => 13, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text character.getPTP() }.grid(:column => 4, :row => 14, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text character.getMTP() }.grid(:column => 4, :row => 15, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getStats.getStatTotal }.grid(:column => 4, :row => 13, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getPTP }.grid(:column => 4, :row => 14, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getMTP }.grid(:column => 4, :row => 15, :sticky => 'e')
 end
 
 # left side
-def StatsBasePanel(content, character)
+def stats_base_panel(content, character)
 
   base = Tk::Tile::Frame.new(content) { width 200; height 200; padding "3 3 12 12" }.grid(:column => 1, :row => 3, :columnspan => 3, :sticky => 'e')
 
@@ -65,69 +65,69 @@ def StatsBasePanel(content, character)
 
   Tk::Tile::Label.new(base) { text }
 
-  bonus = character.getRace()[:bonus]
-  Tk::Tile::Label.new(base) { text bonus.getStr() }.grid(:column => 2, :row => 3, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getCon() }.grid(:column => 2, :row => 4, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getDex() }.grid(:column => 2, :row => 5, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getAgi() }.grid(:column => 2, :row => 6, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getDis() }.grid(:column => 2, :row => 7, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getAur() }.grid(:column => 2, :row => 8, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getLog() }.grid(:column => 2, :row => 9, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getInt() }.grid(:column => 2, :row => 10, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getWis() }.grid(:column => 2, :row => 11, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text bonus.getInf() }.grid(:column => 2, :row => 12, :sticky => 'e')
+  bonus = character.getRace[:bonus]
+  Tk::Tile::Label.new(base) { text bonus.getStr }.grid(:column => 2, :row => 3, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getCon }.grid(:column => 2, :row => 4, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getDex }.grid(:column => 2, :row => 5, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getAgi }.grid(:column => 2, :row => 6, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getDis }.grid(:column => 2, :row => 7, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getAur }.grid(:column => 2, :row => 8, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getLog }.grid(:column => 2, :row => 9, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getInt }.grid(:column => 2, :row => 10, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getWis }.grid(:column => 2, :row => 11, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text bonus.getInf }.grid(:column => 2, :row => 12, :sticky => 'e')
 
-  growth = character.getProfession()[:growth]
-  Tk::Tile::Label.new(base) { text growth.getStr() }.grid(:column => 3, :row => 3, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getCon() }.grid(:column => 3, :row => 4, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getDex() }.grid(:column => 3, :row => 5, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getAgi() }.grid(:column => 3, :row => 6, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getDis() }.grid(:column => 3, :row => 7, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getAur() }.grid(:column => 3, :row => 8, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getLog() }.grid(:column => 3, :row => 9, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getInt() }.grid(:column => 3, :row => 10, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getWis() }.grid(:column => 3, :row => 11, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text growth.getInf() }.grid(:column => 3, :row => 12, :sticky => 'e')
+  growth = character.getProfession[:growth]
+  Tk::Tile::Label.new(base) { text growth.getStr }.grid(:column => 3, :row => 3, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getCon }.grid(:column => 3, :row => 4, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getDex }.grid(:column => 3, :row => 5, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getAgi }.grid(:column => 3, :row => 6, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getDis }.grid(:column => 3, :row => 7, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getAur }.grid(:column => 3, :row => 8, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getLog }.grid(:column => 3, :row => 9, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getInt }.grid(:column => 3, :row => 10, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getWis }.grid(:column => 3, :row => 11, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text growth.getInf }.grid(:column => 3, :row => 12, :sticky => 'e')
 
-  stats = character.getStats()
-  str = TkVariable.new(stats.getStr())
+  stats = character.getStats
+  str = TkVariable.new(stats.getStr)
   str.trace("write", proc { |v| it_has_been_written(v, 'str', character, base) })
-  con = TkVariable.new(stats.getCon())
+  con = TkVariable.new(stats.getCon)
   con.trace("write", proc { |v| it_has_been_written(v, 'con', character, base) })
-  dex = TkVariable.new(stats.getDex())
+  dex = TkVariable.new(stats.getDex)
   dex.trace("write", proc { |v| it_has_been_written(v, 'dex', character, base) })
-  agi = TkVariable.new(stats.getAgi())
+  agi = TkVariable.new(stats.getAgi)
   agi.trace("write", proc { |v| it_has_been_written(v, 'agi', character, base) })
-  dis = TkVariable.new(stats.getDis())
+  dis = TkVariable.new(stats.getDis)
   dis.trace("write", proc { |v| it_has_been_written(v, 'dis', character, base) })
-  aur = TkVariable.new(stats.getAur())
+  aur = TkVariable.new(stats.getAur)
   aur.trace("write", proc { |v| it_has_been_written(v, 'aur', character, base) })
-  log = TkVariable.new(stats.getLog())
+  log = TkVariable.new(stats.getLog)
   log.trace("write", proc { |v| it_has_been_written(v, 'log', character, base) })
-  int = TkVariable.new(stats.getInt())
+  int = TkVariable.new(stats.getInt)
   int.trace("write", proc { |v| it_has_been_written(v, 'int', character, base) })
-  wis = TkVariable.new(stats.getWis())
+  wis = TkVariable.new(stats.getWis)
   wis.trace("write", proc { |v| it_has_been_written(v, 'wis', character, base) })
-  inf = TkVariable.new(stats.getInf())
+  inf = TkVariable.new(stats.getInf)
   inf.trace("write", proc { |v| it_has_been_written(v, 'inf', character, base) })
 
-  myStr = Tk::Tile::Entry.new(base) { textvariable str; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 3, :sticky => 'e')
-  myCon = Tk::Tile::Entry.new(base) { textvariable con; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 4, :sticky => 'e')
-  myDex = Tk::Tile::Entry.new(base) { textvariable dex; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 5, :sticky => 'e')
-  myAgi = Tk::Tile::Entry.new(base) { textvariable agi; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 6, :sticky => 'e')
-  myDis = Tk::Tile::Entry.new(base) { textvariable dis; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 7, :sticky => 'e')
-  myAur = Tk::Tile::Entry.new(base) { textvariable aur; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 8, :sticky => 'e')
-  myLog = Tk::Tile::Entry.new(base) { textvariable log; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 9, :sticky => 'e')
-  myInt = Tk::Tile::Entry.new(base) { textvariable int; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 10, :sticky => 'e')
-  myWis = Tk::Tile::Entry.new(base) { textvariable wis; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 11, :sticky => 'e')
-  myInf = Tk::Tile::Entry.new(base) { textvariable inf; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 12, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable str; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 3, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable con; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 4, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable dex; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 5, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable agi; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 6, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable dis; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 7, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable aur; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 8, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable log; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 9, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable int; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 10, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable wis; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 11, :sticky => 'e')
+  Tk::Tile::Entry.new(base) { textvariable inf; width 4; validate 'key'; validatecommand [proc { |v| check_num(v) }, '%P'] }.grid(:column => 4, :row => 12, :sticky => 'e')
 
   Tk::Tile::Label.new(base) { text 'Statistics Total' }.grid(:column => 1, :row => 13, :columnspan => 3, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text stats.getStatTotal() }.grid(:column => 4, :row => 13, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getStatTotal }.grid(:column => 4, :row => 13, :sticky => 'e')
   Tk::Tile::Label.new(base) { text 'PTP' }.grid(:column => 1, :row => 14, :columnspan => 3, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text character.getPTP() }.grid(:column => 4, :row => 14, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getPTP }.grid(:column => 4, :row => 14, :sticky => 'e')
   Tk::Tile::Label.new(base) { text 'MTP' }.grid(:column => 1, :row => 15, :columnspan => 3, :sticky => 'e')
-  Tk::Tile::Label.new(base) { text character.getMTP() }.grid(:column => 4, :row => 15, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getMTP }.grid(:column => 4, :row => 15, :sticky => 'e')
   Tk::Tile::Label.new(base) { text 'Exp. until next' }.grid(:column => 1, :row => 16, :columnspan => 4, :sticky => 'e')
   Tk::Tile::Label.new(base) { text 'Total Experience' }.grid(:column => 1, :row => 17, :columnspan => 4, :sticky => 'e')
   Tk::Tile::Label.new(base) {}.grid(:column => 1, :row => 18, :columnspan => 4, :sticky => 'e')
@@ -139,71 +139,65 @@ def StatsBasePanel(content, character)
 end
 
 # top right
-def StatsGrowthPanel(content)
+def stats_growth_panel(content)
   growth = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 4, :row => 3, :columnspan => 4, :sticky => 'w')
   Tk::Tile::Label.new(growth) { text 'Stats Growth Panel' }.grid(:column => 1, :row => 1, :sticky => 'w')
 end
 
 # bottom right
-def StatsTrainingPanel(content)
+def stats_training_panel(content)
   training = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 4, :row => 4, :columnspan => 4, :sticky => 'w')
   Tk::Tile::Label.new(training) { text 'Stats Training Panel' }.grid(:column => 1, :row => 1, :sticky => 'w')
 end
 
-def NavigationPanel(content)
+def navigation_panel(content)
   navigation = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 1, :row => 1, :sticky => "ew")
   Tk::Tile::Label.new(navigation) { text 'Statistics' }.grid(:column => 1, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Misc' }.grid(:column => 2, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Skills' }.grid(:column => 3, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Maneuvers' }.grid(:column => 4, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Post Cap' }.grid(:column => 5, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Loadout' }.grid(:column => 6, :row => 1, :sticky => 'ew')
-  Tk::Tile::Separator.new(navigation) { orient 'vertical' }
   Tk::Tile::Label.new(navigation) { text 'Progression' }.grid(:column => 7, :row => 1, :sticky => 'ew')
 end
 
-def change_profession(chosenProf, character, prof, race, content)
-  character.setProfession(prof.getProfessionObjectFromDatabase(chosenProf.value))
+def change_profession(chosen_prof, character, prof, content)
+  character.setProfession(prof.getProfessionObjectFromDatabase(chosen_prof.value))
   Tk.destroy
-  StatsBasePanel(content, character)
+  stats_base_panel(content, character)
 end
 
-def change_race(chosenRace, character, prof, race, content)
-  character.setRace(race.getRaceObjectFromDatabase(chosenRace.value))
-  StatsBasePanel(content, character)
+def change_race(chosen_race, character, race, content)
+  character.setRace(race.getRaceObjectFromDatabase(chosen_race.value))
+  stats_base_panel(content, character)
 end
 
-def StatsChoosePanel(content, character, prof, race)
+def stats_choose_panel(content, character, prof, race)
   chooser = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 1, :row => 2, :sticky => "ew")
-  chosenProf = TkVariable.new(character.getProfession()['name'])
-  chosenRace = TkVariable.new(character.getRace()['name'])
+  chosen_prof = TkVariable.new(character.getProfession['name'])
+  chosen_race = TkVariable.new(character.getRace['name'])
 
-  c = Tk::Tile::Combobox.new(chooser) { textvariable chosenProf }.grid(:column => 2, :row => 2)
-  c.values = prof.getProfessionList()
-  c.bind( "<ComboboxSelected>", proc { change_profession(chosenProf, character, prof, race, content) })
+  c = Tk::Tile::Combobox.new(chooser) { textvariable chosen_prof }.grid(:column => 2, :row => 2)
+  c.values = prof.getProfessionList
+  c.bind( "<ComboboxSelected>", proc { change_profession(chosen_prof, character, prof, content) })
 
-  r = Tk::Tile::Combobox.new(chooser) { textvariable chosenRace }.grid(:column => 3, :row => 2)
-  r.values = race.getRaceList()
-  r.bind( "<ComboboxSelected>", proc {change_race(chosenRace, character, prof, race, content)})
+  r = Tk::Tile::Combobox.new(chooser) { textvariable chosen_race }.grid(:column => 3, :row => 2)
+  r.values = race.getRaceList
+  r.bind( "<ComboboxSelected>", proc {change_race(chosen_race, character, race, content)})
 end
 
-def StatsPanel(character, profession, race)
-  root = TkRoot.new { title "GS4 Character Planner - #{character.getName()}" }
+def stats_panel(character, profession, race)
+  root = TkRoot.new { title "GS4 Character Planner - #{character.getName}" }
 
   content = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:sticky => 'nsew')
 
   TkGrid.columnconfigure root, 0, :weight => 1; TkGrid.rowconfigure root, 0, :weight => 1
   Tk::Tile::Style.configure('Danger.TFrame', "background" => "red")
-  NavigationPanel(content)
-  StatsChoosePanel(content, character, profession, race)
-  StatsBasePanel(content, character)
-  StatsGrowthPanel(content)
-  StatsTrainingPanel(content)
+  navigation_panel(content)
+  stats_choose_panel(content, character, profession, race)
+  stats_base_panel(content, character)
+  stats_growth_panel(content)
+  stats_training_panel(content)
   Tk.mainloop
 
 end
@@ -217,5 +211,5 @@ character.setProfession(profession.getProfessionObjectFromDatabase('Warrior'))
 character.setRace(race.getRaceObjectFromDatabase('Human'))
 
 
-StatsPanel(character, profession, race)
+stats_panel(character, profession, race)
 puts character.inspect
