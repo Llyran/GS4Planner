@@ -108,90 +108,56 @@ class Character
     @stats
   end
 
+  # Calculate PTP/MTP. This formula is (STR + CON + DEX + AGI) + (AUR + DIS) / 2  for PTP and (LOG + INT + WIS + INF) + (AUR + DIS) / 2 for MTP.
+  # Prime statistics count as double for these calculations
   def getPTP
     phsStats = getProfession[:prime]
-    bonus = getRace()[:bonus]
 
-    if (phsStats[:stat1] == 'Aura' || phsStats[:stat2] == 'Aura')
-      aur = (@stats.getAur() * 2) + bonus.getAur()
-    else
-      aur = @stats.getAur() + bonus.getAur()
-    end
+    aur = (phsStats[:stat1] == 'Aura'         || phsStats[:stat2] == 'Aura')         ? @stats.getAur() * 2 : @stats.getAur()
+    dis = (phsStats[:stat1] == 'Discipline'   || phsStats[:stat2] == 'Discipline')   ? @stats.getDis() * 2 : @stats.getDis()
+    str = (phsStats[:stat1] == 'Strength'     || phsStats[:stat2] == 'Strength')     ? @stats.getStr() * 2 : @stats.getStr()
+    con = (phsStats[:stat1] == 'Constitution' || phsStats[:stat2] == 'Constitution') ? @stats.getCon() * 2 : @stats.getCon()
+    dex = (phsStats[:stat1] == 'Dexterity'    || phsStats[:stat2] == 'Dexterity')    ? @stats.getDex() * 2 : @stats.getDex()
+    agi = (phsStats[:stat1] == 'Agility'      || phsStats[:stat2] == 'Agility')      ? @stats.getAgi() * 2 : @stats.getAgi()
 
-    if (phsStats[:stat1] == 'Discipline' || phsStats[:stat2] == 'Discipline')
-      dis = (@stats.getDis() * 2) + bonus.getDis()
-    else
-      dis = @stats.getDis() + bonus.getDis()
-    end
+    ptp_sum = (aur + dis)/2
+    ptp_sum = (ptp_sum + str + con + dex + agi) / 20
+    ptp_sum += 25
 
-    if (phsStats[:stat1] == 'Strength' || phsStats[:stat2] == 'Strength')
-      str = (@stats.getStr() * 2) + bonus.getStr()
-    else
-      str = @stats.getStr() + bonus.getStr()
-    end
-
-    if (phsStats[:stat1] == 'Constitution' || phsStats[:stat2] == 'Constitution')
-      con = (@stats.getCon() * 2) + bonus.getCon()
-    else
-      con = @stats.getCon() + bonus.getCon()
-    end
-
-    if (phsStats[:stat1] == 'Dexterity' || phsStats[:stat2] == 'Dexterity')
-      dex = (@stats.getDex() * 2) + bonus.getDex()
-    else
-      dex = @stats.getDex() + bonus.getDex()
-    end
-
-    if (phsStats[:stat1] == 'Agility' || phsStats[:stat2] == 'Agility')
-      agi = (@stats.getAgi() * 2) + bonus.getAgi()
-    else
-      agi = @stats.getAgi() + bonus.getAgi()
-    end
-
-    return 25 + ((((aur + dis) / 2) + str + con + dex + agi) / 20)
+    return ptp_sum
   end
 
   def getMTP
     menStats = getProfession[:mana]
-    bonus = getRace()[:bonus]
 
-    if (menStats[:stat1] == 'Aura' || menStats[:stat2] == 'Aura')
-      aur = (@stats.getAur() * 2) + bonus.getAur()
-    else
-      aur = @stats.getAur() + bonus.getAur()
-    end
+    aur = (menStats[:stat1] == 'Aura'       || menStats[:stat2] == 'Aura')       ? @stats.getAur() * 2 : @stats.getAur()
+    dis = (menStats[:stat1] == 'Discipline' || menStats[:stat2] == 'Discipline') ? @stats.getDis() * 2 : @stats.getDis()
+    log = (menStats[:stat1] == 'Logic'      || menStats[:stat2] == 'Logic')      ? @stats.getLog() * 2 : @stats.getLog()
+    int = (menStats[:stat1] == 'Intuition'  || menStats[:stat2] == 'Intuition')  ? @stats.getInt() * 2 : @stats.getInt()
+    wis = (menStats[:stat1] == 'Wisdom'     || menStats[:stat2] == 'Wisdom')     ? @stats.getWis() * 2 : @stats.getWis()
+    inf = (menStats[:stat1] == 'Influence'  || menStats[:stat2] == 'Influence')  ? @stats.getInf() * 2 : @stats.getInf()
 
-    if (menStats[:stat1] == 'Discipline' || menStats[:stat2] == 'Discipline')
-      dis = (@stats.getDis() * 2) + bonus.getDis()
-    else
-      dis = @stats.getDis() + bonus.getDis()
-    end
+    mtp_sum = (aur + dis)/2
+    mtp_sum = (mtp_sum + log + int + wis + inf) / 20
+    mtp_sum += 25
 
-    if (menStats[:stat1] == 'Logic' || menStats[:stat2] == 'Logic')
-      log = (@stats.getLog() * 2) + bonus.getLog()
-    else
-      log = @stats.getLog() + bonus.getLog()
-    end
+    return mtp_sum
+  end
 
-    if (menStats[:stat1] == 'Intuition' || menStats[:stat2] == 'Intuition')
-      int = (@stats.getInt() * 2) + bonus.getInt()
-    else
-      int = @stats.getInt() + bonus.getInt()
-    end
+  def calcHealth(level)
+    return 0
+  end
 
-    if (menStats[:stat1] == 'Wisdom' || menStats[:stat2] == 'Wisdom')
-      wis = (@stats.getWis() * 2) + bonus.getWis()
-    else
-      wis = @stats.getWis() + bonus.getWis()
-    end
+  def calcMana(level)
+    return 0
+  end
 
-    if (menStats[:stat1] == 'Influence' || menStats[:stat2] == 'Influence')
-      inf = (@stats.getInf() * 2) + bonus.getInf()
-    else
-      inf = @stats.getInf() + bonus.getInf()
-    end
+  def calcStamina(level)
+    return 0
+  end
 
-    return 25 + ((((aur + dis) / 2) + log + inf + wis + inf) / 20)
+  def calcSpirit(level)
+    return 0
   end
 
   # Setters
