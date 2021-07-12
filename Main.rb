@@ -44,14 +44,15 @@ end
 
 # left side
 def stats_base_panel(content, character)
-
   base = Tk::Tile::Frame.new(content) { width 200; height 200; padding "3 3 12 12" }.grid(:column => 1, :row => 3, :columnspan => 3, :sticky => 'e')
+  accumulated_experience = 0
 
   Tk::Tile::Label.new(base) { text 'Statistic' }.grid(:column => 1, :row => 2)
   Tk::Tile::Label.new(base) { text 'Race Bonus' }.grid(:column => 2, :row => 2)
   Tk::Tile::Label.new(base) { text 'Growth Index' }.grid(:column => 3, :row => 2)
   Tk::Tile::Label.new(base) { text 'Base' }.grid(:column => 4, :row => 2)
 
+  # Tk::Tile::Label.new(base) { text 'Strength' + character.getProfession.isPrimeStat?('Strength') ? '(P)' : '' }.grid(:column => 1, :row => 3, :sticky => 'w')
   Tk::Tile::Label.new(base) { text 'Strength' }.grid(:column => 1, :row => 3, :sticky => 'w')
   Tk::Tile::Label.new(base) { text 'Constitution' }.grid(:column => 1, :row => 4, :sticky => 'w')
   Tk::Tile::Label.new(base) { text 'Dexterity' }.grid(:column => 1, :row => 5, :sticky => 'w')
@@ -136,19 +137,76 @@ def stats_base_panel(content, character)
   Tk::Tile::Label.new(base) { text 'Stamina' }.grid(:column => 1, :row => 21, :columnspan => 4, :sticky => 'e')
   Tk::Tile::Label.new(base) { text 'Spirit' }.grid(:column => 1, :row => 22, :columnspan => 4, :sticky => 'e')
 
+  # Now we start the growth (right) side of the panel
+  # This is training 0, which is base stats with no growth
+  Tk::Tile::Label.new(base) { text 0 }.grid(:column => 5, :row => 2, :sticky => 'nw')
+  Tk::Tile::Label.new(base) { text stats.getStr }.grid(:column => 5, :row => 3, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getCon }.grid(:column => 5, :row => 4, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getDex }.grid(:column => 5, :row => 5, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getAgi }.grid(:column => 5, :row => 6, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getDis }.grid(:column => 5, :row => 7, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getAur }.grid(:column => 5, :row => 8, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getLog }.grid(:column => 5, :row => 9, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getInt }.grid(:column => 5, :row => 10, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getWis }.grid(:column => 5, :row => 11, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text stats.getInf }.grid(:column => 5, :row => 12, :sticky => 'e')
+
+  Tk::Tile::Label.new(base) { text stats.getStatTotal }.grid(:column => 5, :row => 13, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getPTP }.grid(:column => 5, :row => 14, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getMTP }.grid(:column => 5, :row => 15, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.getExperienceByLevel(0) }.grid(:column => 5, :row => 16, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text accumulated_experience }.grid(:column => 5, :row => 17, :sticky => 'e')
+
+  Tk::Tile::Label.new(base) { text character.calcHealth(0) }.grid(:column => 5, :row => 19, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.calcMana(0) }.grid(:column => 5, :row => 20, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.calcStamina(0) }.grid(:column => 5, :row => 21, :sticky => 'e')
+  Tk::Tile::Label.new(base) { text character.calcSpirit(0) }.grid(:column => 5, :row => 22, :sticky => 'e')
+
+  growth_str = character.calcGrowth('str')
+  growth_con = character.calcGrowth('con')
+  growth_dex = character.calcGrowth('dex')
+  growth_agi = character.calcGrowth('agi')
+  growth_dis = character.calcGrowth('dis')
+  growth_aur = character.calcGrowth('aur')
+  growth_log = character.calcGrowth('log')
+  growth_int = character.calcGrowth('int')
+  growth_wis = character.calcGrowth('wis')
+  growth_inf = character.calcGrowth('inf')
+
+  # Loop to calculate growth for training levels 1..100
+  for i in 1..10
+    Tk::Tile::Label.new(base) { text i }.grid(:column => i+5, :row => 2, :sticky => 'nw')
+    Tk::Tile::Label.new(base) { text growth_str[i] }.grid(:column => i+5, :row => 3, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_con[i] }.grid(:column => i+5, :row => 4, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_dex[i] }.grid(:column => i+5, :row => 5, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_agi[i] }.grid(:column => i+5, :row => 6, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_dis[i] }.grid(:column => i+5, :row => 7, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_aur[i] }.grid(:column => i+5, :row => 8, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_log[i] }.grid(:column => i+5, :row => 9, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_int[i] }.grid(:column => i+5, :row => 10, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_wis[i] }.grid(:column => i+5, :row => 11, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text growth_inf[i] }.grid(:column => i+5, :row => 12, :sticky => 'e')
+
+    stat_total = growth_str[i] + growth_con[i] + growth_dex[i] + growth_agi[i] + growth_dis[i] +
+      growth_aur[i] + growth_log[i] + growth_int[i] + growth_wis[i] + growth_inf[i]
+    stat_ptp = character.getPtp_by_stats(growth_aur[i], growth_dis[i], growth_str[i], growth_con[i], growth_dex[i], growth_agi[i])
+    stat_mtp = character.getMtp_by_stats(growth_aur[i], growth_dis[i], growth_log[i], growth_int[i], growth_wis[i], growth_inf[i])
+    accumulated_experience += character.getExperienceByLevel(i)
+
+    Tk::Tile::Label.new(base) { text stat_total }.grid(:column => i+5, :row => 13, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text stat_ptp }.grid(:column => i+5, :row => 14, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text stat_mtp }.grid(:column => i+5, :row => 15, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text character.getExperienceByLevel(i) }.grid(:column => i+5, :row => 16, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text accumulated_experience }.grid(:column => i+5, :row => 17, :sticky => 'e')
+
+    Tk::Tile::Label.new(base) { text character.calcHealth(i) }.grid(:column => i+5, :row => 19, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text character.calcMana(i) }.grid(:column => i+5, :row => 20, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text character.calcStamina(i) }.grid(:column => i+5, :row => 21, :sticky => 'e')
+    Tk::Tile::Label.new(base) { text character.calcSpirit(i) }.grid(:column => i+5, :row => 22, :sticky => 'e')
+
+  end
 end
 
-# top right
-def stats_growth_panel(content)
-  growth = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 4, :row => 3, :columnspan => 4, :sticky => 'w')
-  Tk::Tile::Label.new(growth) { text 'Stats Growth Panel' }.grid(:column => 1, :row => 1, :sticky => 'w')
-end
-
-# bottom right
-def stats_training_panel(content)
-  training = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 4, :row => 4, :columnspan => 4, :sticky => 'w')
-  Tk::Tile::Label.new(training) { text 'Stats Training Panel' }.grid(:column => 1, :row => 1, :sticky => 'w')
-end
 
 def navigation_panel(content)
   navigation = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 1, :row => 1, :sticky => "ew")
@@ -179,11 +237,11 @@ def stats_choose_panel(content, character, prof, race)
 
   c = Tk::Tile::Combobox.new(chooser) { textvariable chosen_prof }.grid(:column => 2, :row => 2)
   c.values = prof.getProfessionList
-  c.bind( "<ComboboxSelected>", proc { change_profession(chosen_prof, character, prof, content) })
+  c.bind("<ComboboxSelected>", proc { change_profession(chosen_prof, character, prof, content) })
 
   r = Tk::Tile::Combobox.new(chooser) { textvariable chosen_race }.grid(:column => 3, :row => 2)
   r.values = race.getRaceList
-  r.bind( "<ComboboxSelected>", proc {change_race(chosen_race, character, race, content)})
+  r.bind("<ComboboxSelected>", proc { change_race(chosen_race, character, race, content) })
 end
 
 def stats_panel(character, profession, race)
@@ -196,8 +254,6 @@ def stats_panel(character, profession, race)
   navigation_panel(content)
   stats_choose_panel(content, character, profession, race)
   stats_base_panel(content, character)
-  stats_growth_panel(content)
-  stats_training_panel(content)
   Tk.mainloop
 
 end
@@ -209,7 +265,6 @@ character = Character.new
 character.setName('Llyran')
 character.setProfession(profession.getProfessionObjectFromDatabase('Warrior'))
 character.setRace(race.getRaceObjectFromDatabase('Human'))
-
 
 stats_panel(character, profession, race)
 puts character.inspect
