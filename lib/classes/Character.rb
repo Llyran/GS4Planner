@@ -108,17 +108,25 @@ class Character
     @stats
   end
 
+  def isPrimeStat?(myStat)
+    (myStat == @profession[:prime][:stat1] || myStat == @profession[:prime][:stat2])
+  end
+
+  def isManaStat?(myStat)
+    (myStat == @profession[:mana][:stat1] || myStat == @profession[:mana][:stat2])
+  end
+
   # Calculate PTP/MTP. This formula is (STR + CON + DEX + AGI) + (AUR + DIS) / 2  for PTP and (LOG + INT + WIS + INF) + (AUR + DIS) / 2 for MTP.
   # Prime statistics count as double for these calculations
   def getPtp_by_stats(myAur, myDis, myStr, myCon, myDex, myAgi)
     phsStats = getProfession[:prime]
 
-    aur = (phsStats[:stat1] == 'Aura' || phsStats[:stat2] == 'Aura') ? myAur * 2 : myAur
-    dis = (phsStats[:stat1] == 'Discipline' || phsStats[:stat2] == 'Discipline') ? myDis * 2 : myDis
-    str = (phsStats[:stat1] == 'Strength' || phsStats[:stat2] == 'Strength') ? myStr * 2 : myStr
-    con = (phsStats[:stat1] == 'Constitution' || phsStats[:stat2] == 'Constitution') ? myCon * 2 : myCon
-    dex = (phsStats[:stat1] == 'Dexterity' || phsStats[:stat2] == 'Dexterity') ? myDex * 2 : myDex
-    agi = (phsStats[:stat1] == 'Agility' || phsStats[:stat2] == 'Agility') ? myAgi * 2 : myAgi
+    aur = (isPrimeStat?('Aura') ) ? myAur * 2 : myAur
+    dis = (isPrimeStat?('Discipline')) ? myDis * 2 : myDis
+    str = (isPrimeStat?('Strength')) ? myStr * 2 : myStr
+    con = (isPrimeStat?('Constitution')) ? myCon * 2 : myCon
+    dex = (isPrimeStat?('Dexterity')) ? myDex * 2 : myDex
+    agi = (isPrimeStat?('Agility')) ? myAgi * 2 : myAgi
 
     ptp_sum = (aur + dis) / 2
     ptp_sum = (ptp_sum + str + con + dex + agi) / 20
@@ -135,12 +143,12 @@ class Character
   def getMtp_by_stats(myAur, myDis, myLog, myInt, myWis, myInf)
     menStats = getProfession[:mana]
 
-    aur = (menStats[:stat1] == 'Aura' || menStats[:stat2] == 'Aura') ? myAur * 2 : myAur
-    dis = (menStats[:stat1] == 'Discipline' || menStats[:stat2] == 'Discipline') ? myDis * 2 : myDis
-    log = (menStats[:stat1] == 'Logic' || menStats[:stat2] == 'Logic') ? myLog * 2 : myLog
-    int = (menStats[:stat1] == 'Intuition' || menStats[:stat2] == 'Intuition') ? myInt * 2 : myInt
-    wis = (menStats[:stat1] == 'Wisdom' || menStats[:stat2] == 'Wisdom') ? myWis * 2 : myWis
-    inf = (menStats[:stat1] == 'Influence' || menStats[:stat2] == 'Influence') ? myInf * 2 : myInf
+    aur = (isManaStat?('Aura')) ? myAur * 2 : myAur
+    dis = (isManaStat?('Discipline')) ? myDis * 2 : myDis
+    log = (isManaStat?('Logic')) ? myLog * 2 : myLog
+    int = (isManaStat?('Intuition')) ? myInt * 2 : myInt
+    wis = (isManaStat?('Wisdom')) ? myWis * 2 : myWis
+    inf = (isManaStat?('Influence')) ? myInf * 2 : myInf
 
     mtp_sum = (aur + dis) / 2
     mtp_sum = (mtp_sum + log + int + wis + inf) / 20
