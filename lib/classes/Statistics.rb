@@ -143,6 +143,11 @@ class Statistics
                   aur: "Aura", log: "Logic", int: "Intuition", wis: "Wisdom", inf: "Influence"}
   end
 
+  def getStats
+    {str: @str, con: @con, dex: @dex, agi: @agi, dis: @dis,
+     aur: @aur, log: @log, int: @int, wis: @wis, inf: @inf}
+  end
+
   def resetStats
     createStats
   end

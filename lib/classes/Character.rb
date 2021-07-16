@@ -1,4 +1,5 @@
 require "./lib/classes/Statistics"
+
 # The Character object holds all the values and objects related to the character from across all the panels.
 # These values can be easily accessed by all other panels and allows the planner to save and load character build file with minimum effort.
 class Character
@@ -121,7 +122,7 @@ class Character
   def getPtp_by_stats(myAur, myDis, myStr, myCon, myDex, myAgi)
     phsStats = getProfession[:prime]
 
-    aur = (isPrimeStat?('Aura') ) ? myAur * 2 : myAur
+    aur = (isPrimeStat?('Aura')) ? myAur * 2 : myAur
     dis = (isPrimeStat?('Discipline')) ? myDis * 2 : myDis
     str = (isPrimeStat?('Strength')) ? myStr * 2 : myStr
     con = (isPrimeStat?('Constitution')) ? myCon * 2 : myCon
@@ -163,10 +164,10 @@ class Character
   end
 
   def getExperienceByLevel(level)
-    @experience = [   25,   25,   50,   75,  100,  125,  150,  175,  200,  225,  250,  275,  300,  325,  350,  370,  390,  410,  430,  450,  470,  490,  510,  530,  550,
-                     565,  580,  595,  610,  625,  640,  655,  670,  685,  700,  715,  730,  745,  760,  775,  785,  795,  805,  815,  825,  835,  845,  855,  865,  875,
-                     880,  885,  890,  895,  900,  905,  910,  915,  920,  925,  930,  935,  940,  945,  950,  955,  960,  965,  970,  975,  980,  985,  990,  995, 1000,
-                    1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125]
+    @experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550,
+                   565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875,
+                   880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000,
+                   1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125]
 
     return @experience[level] * 100
   end
@@ -232,7 +233,7 @@ class Character
       myGrowth = myStats[i - 1] / growth_interval
       myGrowth = (myGrowth <= 1) ? 1 : myGrowth
 
-      myStats[i] = (i % myGrowth == 0) ?  myStats[i - 1] + 1 : myStats[i - 1]
+      myStats[i] = (i % myGrowth == 0) ? myStats[i - 1] + 1 : myStats[i - 1]
     end
 
     return myStats
@@ -251,39 +252,44 @@ class Character
     @profession = profession_name
   end
 
-  def loadCharacer
+  # todo Need to figure out a storage mechanism.. either a DB or a flat file
+  def loadCharacter
+    charJSON = '{"name":"Llyran","race":"Elf","profession":"Bard","stats":{"str":30,"con":28,"dex":57,"agi":80,"dis":45,"aur":65,"log":370,"int":55,"wis":70,"inf":44}}'
+    mychar = JSON.parse(charJSON)
 
+    @name = mychar['name']
+    @race = mychar['race']
+    @profession = mychar['profession']
+
+    mystats = mychar['stats']
+    @stats.setStatsFromNames(:str => mystats['str'], :con => mystats['con'], :dex => mystats['dex'], :agi => mystats['agi'], :dis => mystats['dis'],
+                             :aur => mystats['aur'], :log => mystats['log'], :int => mystats['int'], :wis => mystats['wis'], :inf => mystats['inf'])
   end
 
+  # todo Need to figure out a storage mechanism.. either a DB or a flat file
   def saveCharacter
-
+    myDump = JSON.dump({:name => @name, :race => @race['name'], :profession => @profession['name'], :stats => @stats.getStats})
   end
 
-  def update_statistics
-
-  end
-
-  def update_resources(level) end
-
-  def is_prime_stat(stat) end
-
-  def update_skills
-
-  end
-
-  def calculate_subskill_regained_tp(level, subskill_group) end
-
-  def get_total_ranks_of_subskill(name, level, subskill_group) end
-
-  def get_total_postcap_ranks_of_subskill(name, interval, subskill_group) end
-
-  def update_maneuvers
-
-  end
-
-  def meets_maneuver_prerequisites(level, name, type) end
-
-  def get_last_training_interval(experience, type, subtype) end
+  # def update_statistics()  end
+  #
+  # def update_resources(level) end
+  #
+  # def is_prime_stat(stat) end
+  #
+  # def update_skills() end
+  #
+  # def calculate_subskill_regained_tp(level, subskill_group) end
+  #
+  # def get_total_ranks_of_subskill(name, level, subskill_group) end
+  #
+  # def get_total_postcap_ranks_of_subskill(name, interval, subskill_group) end
+  #
+  # def update_maneuvers() end
+  #
+  # def meets_maneuver_prerequisites(level, name, type) end
+  #
+  # def get_last_training_interval(experience, type, subtype) end
 end
 
 
