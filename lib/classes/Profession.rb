@@ -61,7 +61,7 @@ class Profession
 
   # todo: Need to rewrite this to pull from database
   def getProfessionList
-    @profNames = ["Bard", "Cleric", "Empath", "Monk", "Paladin", "Ranger", "Rogue", "Savant", "Sorcerer", "Warrior", "Wizard"]
+    @profNames = ["Bard", "Cleric", "Empath", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warrior", "Wizard"]
   end
   # setter methods
 

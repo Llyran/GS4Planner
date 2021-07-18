@@ -164,10 +164,10 @@ class Character
   end
 
   def getExperienceByLevel(level)
-    @experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550,
-                   565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875,
-                   880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000,
-                   1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125]
+    @experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, #0..25
+                   565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875, #26..50
+                   880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000, #51..75
+                   1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125] #76..100
 
     return @experience[level] * 100
   end
@@ -191,39 +191,9 @@ class Character
   def calcGrowth(stat)
     myStats = Array.new()
 
-    case stat
-    when 'str'
-      growth_interval = @profession[:growth].getStr + @race[:adjust].getStr
-      myStart = @stats.getStr
-    when 'con'
-      growth_interval = @profession[:growth].getCon + @race[:adjust].getCon
-      myStart = @stats.getCon
-    when 'dex'
-      growth_interval = @profession[:growth].getDex + @race[:adjust].getDex
-      myStart = @stats.getDex
-    when 'agi'
-      growth_interval = @profession[:growth].getAgi + @race[:adjust].getAgi
-      myStart = @stats.getAgi
-    when 'dis'
-      growth_interval = @profession[:growth].getDis + @race[:adjust].getDis
-      myStart = @stats.getDis
-    when 'aur'
-      growth_interval = @profession[:growth].getAur + @race[:adjust].getAur
-      myStart = @stats.getAur
-    when 'log'
-      growth_interval = @profession[:growth].getLog + @race[:adjust].getLog
-      myStart = @stats.getLog
-    when 'int'
-      growth_interval = @profession[:growth].getInt + @race[:adjust].getInt
-      myStart = @stats.getInt
-    when 'wis'
-      growth_interval = @profession[:growth].getWis + @race[:adjust].getWis
-      myStart = @stats.getWis
-    when 'inf'
-      growth_interval = @profession[:growth].getInf + @race[:adjust].getInf
-      myStart = @stats.getInf
-    end
-
+    myStart = @stats.getStat(stat)
+    growth_interval = getGrowthIndex(stat)
+    puts growth_interval.inspect
     myStats[0] = myStart
 
     # todo: This could need some debugging down the road..
@@ -237,6 +207,10 @@ class Character
     end
 
     return myStats
+  end
+
+  def getGrowthIndex(stat)
+    @profession[:growth].getStat(stat) + @race[:adjust].getStat(stat)
   end
 
   # Setters
@@ -268,7 +242,7 @@ class Character
 
   # todo Need to figure out a storage mechanism.. either a DB or a flat file
   def saveCharacter
-    myDump = JSON.dump({:name => @name, :race => @race['name'], :profession => @profession['name'], :stats => @stats.getStats})
+    myDump = JSON.dump({ :name => @name, :race => @race['name'], :profession => @profession['name'], :stats => @stats.getStats })
   end
 
   # def update_statistics()  end

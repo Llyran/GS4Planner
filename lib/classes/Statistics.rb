@@ -148,6 +148,56 @@ class Statistics
      aur: @aur, log: @log, int: @int, wis: @wis, inf: @inf}
   end
 
+  def getStat(stat)
+    case stat
+    when 'str'
+      return getStr
+    when 'con'
+      return getCon
+    when 'dex'
+      return getDex
+    when 'agi'
+      return getAgi
+    when 'dis'
+      return getDis
+    when 'aur'
+      return getAur
+    when 'log'
+      return getLog
+    when 'int'
+      return getInt
+    when 'wis'
+      return getWis
+    when 'inf'
+      return getInf
+    end
+  end
+
+  def setStat(stat, value)
+    case stat
+    when 'str'
+      return setStr(value)
+    when 'con'
+      return setCon(value)
+    when 'dex'
+      return setDex(value)
+    when 'agi'
+      return setAgi(value)
+    when 'dis'
+      return setDis(value)
+    when 'aur'
+      return setAur(value)
+    when 'log'
+      return setLog(value)
+    when 'int'
+      return setInt(value)
+    when 'wis'
+      return setWis(value)
+    when 'inf'
+      return setInf(value)
+    end
+  end
+
   def resetStats
     createStats
   end
