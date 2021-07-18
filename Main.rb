@@ -10,13 +10,13 @@ def check_num(new_val)
 end
 
 def it_has_been_written(val, stat, character, content)
-  stats = character.getStats
-  stat_names = stats.getStatNames
-
   my_value = val.value.to_i
-  if my_value == 0
+  if my_value <= 20 || my_value > 100
     return
   end
+
+  stats = character.getStats
+  stat_names = stats.getStatNames
 
   character.getStats.setStat(stat, my_value)
 
@@ -51,38 +51,12 @@ def create_header_line(container)
 end
 
 def create_detail_line(content, my_stat, my_stat_name, character)
-  row = 0
-  my_stats = 0
-  my_bonus = 0
-  my_growth = 0
+  rows = {str: 3 ,con: 4, dex: 5, agi: 6, dis: 7, aur: 8, log: 9, int: 10, wis: 11, inf: 12}
 
   bonus = character.getRace[:bonus]
-  growth = character.getProfession[:growth]
-  adjust = character.getRace[:adjust]
   stats = character.getStats
 
-  case my_stat
-  when 'str'
-    row = 3
-  when 'con'
-    row = 4
-  when 'dex'
-    row = 5
-  when 'agi'
-    row = 6
-  when 'dis'
-    row = 7
-  when 'aur'
-    row = 8
-  when 'log'
-    row = 9
-  when 'int'
-    row = 10
-  when 'wis'
-    row = 11
-  when 'inf'
-    row = 12
-  end
+  row = rows[my_stat.to_sym]
 
   my_stats = stats.getStat(my_stat)
   my_bonus = bonus.getStat(my_stat)
@@ -97,8 +71,8 @@ def create_detail_line(content, my_stat, my_stat_name, character)
 
   Tk::Tile::Label.new(content) { text my_stats }.grid(:column => 5, :row => row, :sticky => 'e')['style'] = 'Column.TLabel'
 
+  growth = character.calcGrowth(my_stat)
   (1..10).each { |i|
-    growth = character.calcGrowth(my_stat)
     Tk::Tile::Label.new(content) { text growth[i] }.grid(:column => i + 5, :row => row, :sticky => 'e')['style'] = 'Column.TLabel'
   }
 end
@@ -162,7 +136,7 @@ def stats_base_panel(content, character)
 end
 
 def create_footer_lines(content, character)
-  accumulated_experience = 2500
+  accumulated_experience = 0
   stats = character.getStats
 
   growth_str = character.calcGrowth('str')
@@ -220,24 +194,6 @@ def create_footer_lines(content, character)
   }
 end
 
-def navigation_panel(content)
-  # puts Tk::Tile::Style.element_options("Label.label")
-
-  Tk::Tile::Style.configure('Emergency.TLabel', { "font" => 'helvetica 24' })
-  Tk::Tile::Style.configure('ColumnHead.TLabel', { "font" => 'helvetica 20', "bg" => 'red' })
-  Tk::Tile::Style.configure('Column.TLabel', { "font" => 'helvetica 18', "background" => 'red' })
-  Tk::Tile::Style.configure('Column.TEntry', { "font" => 'helvetica 18', "bg" => 'red' })
-
-  navigation = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:column => 1, :row => 1, :sticky => "ew")
-  Tk::Tile::Label.new(navigation) { text 'Statistics' }.grid(:column => 1, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Misc' }.grid(:column => 2, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Skills' }.grid(:column => 3, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Maneuvers' }.grid(:column => 4, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Post Cap' }.grid(:column => 5, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Loadout' }.grid(:column => 6, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-  Tk::Tile::Label.new(navigation) { text 'Progression' }.grid(:column => 7, :row => 1, :sticky => 'ew')['style'] = 'Emergency.TLabel'
-end
-
 def change_profession(chosen_prof, character, prof, content)
   character.setProfession(prof.getProfessionObjectFromDatabase(chosen_prof.value))
   Tk.destroy
@@ -264,18 +220,78 @@ def stats_choose_panel(content, character, prof, race)
   c.bind("<ComboboxSelected>", proc { change_profession(chosen_prof, character, prof, content) })
 end
 
-def stats_panel(character, profession, race)
-  root = TkRoot.new { title "GS4 Character Planner - #{character.getName}" }
+def misc_panel(misc)
+  Tk::Tile::Label.new(misc) {text "misc panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
 
-  content = Tk::Tile::Frame.new(content) { padding "3 3 12 12" }.grid(:sticky => 'nsew')
+def skills_panel(skills)
+  Tk::Tile::Label.new(skills) {text "skills panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
+
+def maneuvers_panel(maneuvers)
+  Tk::Tile::Label.new(maneuvers) {text "maneuvers panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
+
+def post_cap_panel(post_cap)
+  Tk::Tile::Label.new(post_cap) {text "post_cap panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
+
+def loadout_panel(loadout)
+  Tk::Tile::Label.new(loadout) {text "loadout panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
+
+def progression_panel(progression)
+  Tk::Tile::Label.new(progression) {text "progression panel"}.grid(:column => 1, :row => 1, :sticky => 'we')['style'] = 'Emergency.TLabel'
+end
+
+def stats_panel(character, profession, race)
+  set_styles
+  root = TkRoot.new { title "GS4 Character Planner - #{character.getName}" }
+  notebook = Tk::Tile::Notebook.new(root)do
+    height 110
+    place('height' => 700, 'width' => 1200, 'x' => 10, 'y' => 10)
+   end
+
+  statistics = Tk::Tile::Frame.new(notebook) { padding "3 3 12 12" }.grid(:sticky => 'nsew')
+  misc = TkFrame.new(notebook)
+  skills = TkFrame.new(notebook)
+  maneuvers = TkFrame.new(notebook)
+  post_cap = TkFrame.new(notebook)
+  loadout = TkFrame.new(notebook)
+  progression = TkFrame.new(notebook)
 
   TkGrid.columnconfigure root, 0, :weight => 1; TkGrid.rowconfigure root, 0, :weight => 1
-  Tk::Tile::Style.configure('Danger.TFrame', "background" => "red")
-  navigation_panel(content)
-  stats_choose_panel(content, character, profession, race)
-  stats_base_panel(content, character)
+
+  notebook.add statistics, :text => 'Statistics'
+  notebook.add misc, :text => 'Misc'
+  notebook.add skills, :text => 'Skills'
+  notebook.add maneuvers, :text => 'Maneuvers'
+  notebook.add post_cap, :text => 'Post Cap'
+  notebook.add loadout, :text => 'Loadout'
+  notebook.add progression, :text => 'Progression'
+
+  stats_choose_panel(statistics, character, profession, race)
+  stats_base_panel(statistics, character)
+
+  misc_panel(misc)
+  skills_panel(skills)
+  maneuvers_panel(maneuvers)
+  post_cap_panel(post_cap)
+  loadout_panel(loadout)
+  progression_panel(progression)
+
   Tk.mainloop
 
+end
+
+def set_styles
+  Tk::Tile::Style.configure('Danger.TFrame', "background" => "red")
+  Tk::Tile::Style.configure('Emergency.TLabel', { "font" => 'helvetica 24' })
+  Tk::Tile::Style.configure('ColumnHead.TLabel', { "font" => 'helvetica 20', "bg" => 'red' })
+  Tk::Tile::Style.configure('Column.TLabel', { "font" => 'helvetica 18', "background" => 'red' })
+  Tk::Tile::Style.configure('Column.TEntry', { "font" => 'helvetica 18', "bg" => 'red' })
+  Tk::Tile::Style.configure('TNotebook.Tab', {font: "helvetica 22"})
+  Tk::Tile::Style.configure('TNotebook.Tab', {padding: "15 3 15 3"})
 end
 
 race = Race.new
@@ -288,5 +304,3 @@ character.setRace(race.getRaceObjectFromDatabase('Human'))
 
 stats_panel(character, profession, race)
 puts character.inspect
-
-
