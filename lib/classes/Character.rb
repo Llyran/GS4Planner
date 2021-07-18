@@ -193,7 +193,6 @@ class Character
 
     myStart = @stats.getStat(stat)
     growth_interval = getGrowthIndex(stat)
-    puts growth_interval.inspect
     myStats[0] = myStart
 
     # todo: This could need some debugging down the road..
