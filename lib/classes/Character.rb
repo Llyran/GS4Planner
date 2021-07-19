@@ -1,10 +1,14 @@
 require "./lib/classes/Statistics"
+require "json"
 
 # The Character object holds all the values and objects related to the character from across all the panels.
 # These values can be easily accessed by all other panels and allows the planner to save and load character build file with minimum effort.
 class Character
+  DatabaseName = './data/test.db'
 
   def initialize
+    createDatabaseTable
+
     @stats = Statistics.new
     @stats.createDefaultStats()
     # global statistics;
@@ -92,6 +96,13 @@ class Character
     # @LdP_Effects_List_Updated = 0;
   end
 
+  def createDatabaseTable
+    db = SQLite3::Database.open DatabaseName
+    db.results_as_hash = true
+
+    db.execute "CREATE TABLE IF NOT EXISTS Characters (name, jsonData)"
+  end
+
   # Getters
   def getName
     @name
@@ -164,12 +175,12 @@ class Character
   end
 
   def getExperienceByLevel(level)
-    @experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, #0..25
+    experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, #0..25
                    565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875, #26..50
                    880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000, #51..75
                    1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125] #76..100
 
-    return @experience[level] * 100
+    return experience[level] * 100
   end
 
   def calcHealth(level)
@@ -226,9 +237,14 @@ class Character
   end
 
   # todo Need to figure out a storage mechanism.. either a DB or a flat file
-  def loadCharacter
-    charJSON = '{"name":"Llyran","race":"Elf","profession":"Bard","stats":{"str":30,"con":28,"dex":57,"agi":80,"dis":45,"aur":65,"log":370,"int":55,"wis":70,"inf":44}}'
-    mychar = JSON.parse(charJSON)
+  def loadCharacter(name)
+    db = SQLite3::Database.open DatabaseName
+    db.results_as_hash = true
+
+    results = db.query "select * from Characters where name = ?", name
+    result = results.next
+
+    mychar = JSON.parse(result['jsonData'])
 
     @name = mychar['name']
     @race = mychar['race']
@@ -240,8 +256,25 @@ class Character
   end
 
   # todo Need to figure out a storage mechanism.. either a DB or a flat file
-  def saveCharacter
+  def saveCharacter(name)
+    db = SQLite3::Database.open DatabaseName
+
     myDump = JSON.dump({ :name => @name, :race => @race['name'], :profession => @profession['name'], :stats => @stats.getStats })
+    db.execute "insert into Characters VALUES (name, myDump) "
+  end
+
+  def getCharactersFromDb
+    db = SQLite3::Database.open DatabaseName
+    db.results_as_hash = true
+    myCharacters = []
+    my_string = ""
+    results = db.query "SELECT name from Characters"
+    results.each do |row|
+      myCharacters.push(row['name'])
+      my_string += row['name'] + " "
+    end
+
+    return my_string
   end
 
   # def update_statistics()  end
