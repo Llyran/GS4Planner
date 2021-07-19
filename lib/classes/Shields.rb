@@ -1,7 +1,7 @@
 require "sqlite3"
 
 class Shields
-  DatabaseName = './data/test.db'
+  DatabaseName = "./data/test.db"
 
   def initialize
     createDatabaseTable

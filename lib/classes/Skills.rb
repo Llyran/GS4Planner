@@ -1,7 +1,7 @@
 require "sqlite3"
 
 class Skills
-  DatabaseName = './data/test.db'
+  DatabaseName = "./data/test.db"
 
   def initialize
     createDatabaseTable
@@ -102,61 +102,61 @@ class Skills
     results = db.query "SELECT * from Skills where name=?", name
     result = results.next
 
-    bard = {ptp: result['bard_ptp'], mpt: result['bard_mpt'], max_ranks: result['bard_max_ranks']}
-    cleric = {ptp: result['cleric_ptp'], mpt: result['cleric_mpt'], max_ranks: result['cleric_max_ranks']}
-    empath = {ptp: result['empath_ptp'], mpt: result['empath_mpt'], max_ranks: result['empath_max_ranks']}
-    monk = {ptp: result['monk_ptp'], mpt: result['monk_mpt'], max_ranks: result['monk_max_ranks']}
-    paladin = {ptp: result['paladin_ptp'], mpt: result['paladin_mpt'], max_ranks: result['paladin_max_ranks']}
-    ranger = {ptp: result['ranger_ptp'], mpt: result['ranger_mpt'], max_ranks: result['ranger_max_ranks']}
-    rogue = {ptp: result['rogue_ptp'], mpt: result['rogue_mpt'], max_ranks: result['rogue_max_ranks']}
-    savant  = {ptp: result['savant_ptp'], mpt: result['savant_mpt'], max_ranks: result['savant_max_ranks']}
-    sorcerer = {ptp: result['sorcerer_ptp'], mpt: result['sorcerer_mpt'], max_ranks: result['sorcerer_max_ranks']}
-    warrior = {ptp: result['warrior_ptp'], mpt: result['warrior_mpt'], max_ranks: result['warrior_max_ranks']}
-    wizard = {ptp: result['wizard_ptp'], mpt: result['wizard_mpt'], max_ranks: result['wizard_max_ranks']}
+    bard = {ptp: result["bard_ptp"], mpt: result["bard_mpt"], max_ranks: result["bard_max_ranks"]}
+    cleric = {ptp: result["cleric_ptp"], mpt: result["cleric_mpt"], max_ranks: result["cleric_max_ranks"]}
+    empath = {ptp: result["empath_ptp"], mpt: result["empath_mpt"], max_ranks: result["empath_max_ranks"]}
+    monk = {ptp: result["monk_ptp"], mpt: result["monk_mpt"], max_ranks: result["monk_max_ranks"]}
+    paladin = {ptp: result["paladin_ptp"], mpt: result["paladin_mpt"], max_ranks: result["paladin_max_ranks"]}
+    ranger = {ptp: result["ranger_ptp"], mpt: result["ranger_mpt"], max_ranks: result["ranger_max_ranks"]}
+    rogue = {ptp: result["rogue_ptp"], mpt: result["rogue_mpt"], max_ranks: result["rogue_max_ranks"]}
+    savant  = {ptp: result["savant_ptp"], mpt: result["savant_mpt"], max_ranks: result["savant_max_ranks"]}
+    sorcerer = {ptp: result["sorcerer_ptp"], mpt: result["sorcerer_mpt"], max_ranks: result["sorcerer_max_ranks"]}
+    warrior = {ptp: result["warrior_ptp"], mpt: result["warrior_mpt"], max_ranks: result["warrior_max_ranks"]}
+    wizard = {ptp: result["wizard_ptp"], mpt: result["wizard_mpt"], max_ranks: result["wizard_max_ranks"]}
 
-    result.delete('bard_ptp')
-    result.delete('bard_mtp')
-    result.delete('bard_max_ranks')
+    result.delete("bard_ptp")
+    result.delete("bard_mtp")
+    result.delete("bard_max_ranks")
 
-    result.delete('cleric_ptp')
-    result.delete('cleric_mtp')
-    result.delete('cleric_max_ranks')
+    result.delete("cleric_ptp")
+    result.delete("cleric_mtp")
+    result.delete("cleric_max_ranks")
 
-    result.delete('empath_ptp')
-    result.delete('empath_mtp')
-    result.delete('empath_max_ranks')
+    result.delete("empath_ptp")
+    result.delete("empath_mtp")
+    result.delete("empath_max_ranks")
 
-    result.delete('monk_ptp')
-    result.delete('monk_mtp')
-    result.delete('monk_max_ranks')
+    result.delete("monk_ptp")
+    result.delete("monk_mtp")
+    result.delete("monk_max_ranks")
 
-    result.delete('paladin_ptp')
-    result.delete('paladin_mtp')
-    result.delete('paladin_max_ranks')
+    result.delete("paladin_ptp")
+    result.delete("paladin_mtp")
+    result.delete("paladin_max_ranks")
 
-    result.delete('ranger_ptp')
-    result.delete('ranger_mtp')
-    result.delete('ranger_max_ranks')
+    result.delete("ranger_ptp")
+    result.delete("ranger_mtp")
+    result.delete("ranger_max_ranks")
 
-    result.delete('rogue_ptp')
-    result.delete('rogue_mtp')
-    result.delete('rogue_max_ranks')
+    result.delete("rogue_ptp")
+    result.delete("rogue_mtp")
+    result.delete("rogue_max_ranks")
 
-    result.delete('savant_ptp')
-    result.delete('savant_mtp')
-    result.delete('savant_max_ranks')
+    result.delete("savant_ptp")
+    result.delete("savant_mtp")
+    result.delete("savant_max_ranks")
 
-    result.delete('sorcerer_ptp')
-    result.delete('sorcerer_mtp')
-    result.delete('sorcerer_max_ranks')
+    result.delete("sorcerer_ptp")
+    result.delete("sorcerer_mtp")
+    result.delete("sorcerer_max_ranks")
 
-    result.delete('warrior_ptp')
-    result.delete('warrior_mtp')
-    result.delete('warrior_max_ranks')
+    result.delete("warrior_ptp")
+    result.delete("warrior_mtp")
+    result.delete("warrior_max_ranks")
 
-    result.delete('wizard_ptp')
-    result.delete('wizard_mtp')
-    result.delete('wizard_max_ranks')
+    result.delete("wizard_ptp")
+    result.delete("wizard_mtp")
+    result.delete("wizard_max_ranks")
 
     result.merge!(bard: bard)
     result.merge!(cleric: cleric)

@@ -1,9 +1,9 @@
-# The Profession object hold all the information for the character's current profession. This does not include skill costs or max ranks
+# The Profession object hold all the information for the character"s current profession. This does not include skill costs or max ranks
 require "sqlite3"
 require "./lib/classes/Statistics"
 
 class Profession
-  DatabaseName = './data/test.db'
+  DatabaseName = "./data/test.db"
 
   #constructor
   def initialize
@@ -112,51 +112,51 @@ class Profession
     results = db.query "SELECT * from professions where name=?", name
     result = results.next
 
-    spell_circles = { circle1: result['spell_circle1'], circle2: result['spell_circle2'], circle3: result['spell_circle3'] }
+    spell_circles = { circle1: result["spell_circle1"], circle2: result["spell_circle2"], circle3: result["spell_circle3"] }
 
-    result.delete('spell_circle1')
-    result.delete('spell_circle2')
-    result.delete('spell_circle3')
+    result.delete("spell_circle1")
+    result.delete("spell_circle2")
+    result.delete("spell_circle3")
 
-    prime = { stat1: result['prime_statistics1'], stat2: result['prime_statistics2'] }
+    prime = { stat1: result["prime_statistics1"], stat2: result["prime_statistics2"] }
 
-    result.delete('prime_statistics1')
-    result.delete('prime_statistics2')
+    result.delete("prime_statistics1")
+    result.delete("prime_statistics2")
 
-    mana = { stat1: result['mana_statistic1'], stat2: result['mana_statistic2'] }
+    mana = { stat1: result["mana_statistic1"], stat2: result["mana_statistic2"] }
 
-    result.delete('mana_statistic1')
-    result.delete('mana_statistic2')
+    result.delete("mana_statistic1")
+    result.delete("mana_statistic2")
 
-    growth.setStr(result['strength_growth'])
-    growth.setCon(result['constitution_growth'])
-    growth.setDex(result['dexterity_growth'])
-    growth.setAgi(result['agility_growth'])
-    growth.setDis(result['discipline_growth'])
-    growth.setAur(result['aura_growth'])
-    growth.setLog(result['logic_growth'])
-    growth.setInt(result['intuition_growth'])
-    growth.setWis(result['wisdom_growth'])
-    growth.setInf(result['influence_growth'])
+    growth.setStr(result["strength_growth"])
+    growth.setCon(result["constitution_growth"])
+    growth.setDex(result["dexterity_growth"])
+    growth.setAgi(result["agility_growth"])
+    growth.setDis(result["discipline_growth"])
+    growth.setAur(result["aura_growth"])
+    growth.setLog(result["logic_growth"])
+    growth.setInt(result["intuition_growth"])
+    growth.setWis(result["wisdom_growth"])
+    growth.setInf(result["influence_growth"])
 
-    result.delete('strength_growth')
-    result.delete('constitution_growth')
-    result.delete('dexterity_growth')
-    result.delete('agility_growth')
-    result.delete('discipline_growth')
-    result.delete('aura_growth')
-    result.delete('logic_growth')
-    result.delete('intuition_growth')
-    result.delete('wisdom_growth')
-    result.delete('influence_growth')
+    result.delete("strength_growth")
+    result.delete("constitution_growth")
+    result.delete("dexterity_growth")
+    result.delete("agility_growth")
+    result.delete("discipline_growth")
+    result.delete("aura_growth")
+    result.delete("logic_growth")
+    result.delete("intuition_growth")
+    result.delete("wisdom_growth")
+    result.delete("influence_growth")
 
-    guild = { skill1: result['guild_skill1'], skill2: result['guild_skill2'], skill3: result['guild_skill3'], skill4: result['guild_skill4'], skill5: result['guild_skill5'], skill6: result['guild_skill6'] }
-    result.delete('guild_skill1')
-    result.delete('guild_skill2')
-    result.delete('guild_skill3')
-    result.delete('guild_skill4')
-    result.delete('guild_skill5')
-    result.delete('guild_skill6')
+    guild = { skill1: result["guild_skill1"], skill2: result["guild_skill2"], skill3: result["guild_skill3"], skill4: result["guild_skill4"], skill5: result["guild_skill5"], skill6: result["guild_skill6"] }
+    result.delete("guild_skill1")
+    result.delete("guild_skill2")
+    result.delete("guild_skill3")
+    result.delete("guild_skill4")
+    result.delete("guild_skill5")
+    result.delete("guild_skill6")
 
     result.merge!(spell_circles: spell_circles)
     result.merge!(prime: prime)

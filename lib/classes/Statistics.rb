@@ -150,50 +150,50 @@ class Statistics
 
   def getStat(stat)
     case stat
-    when 'str'
+    when "str"
       return getStr
-    when 'con'
+    when "con"
       return getCon
-    when 'dex'
+    when "dex"
       return getDex
-    when 'agi'
+    when "agi"
       return getAgi
-    when 'dis'
+    when "dis"
       return getDis
-    when 'aur'
+    when "aur"
       return getAur
-    when 'log'
+    when "log"
       return getLog
-    when 'int'
+    when "int"
       return getInt
-    when 'wis'
+    when "wis"
       return getWis
-    when 'inf'
+    when "inf"
       return getInf
     end
   end
 
   def setStat(stat, value)
     case stat
-    when 'str'
+    when "str"
       return setStr(value)
-    when 'con'
+    when "con"
       return setCon(value)
-    when 'dex'
+    when "dex"
       return setDex(value)
-    when 'agi'
+    when "agi"
       return setAgi(value)
-    when 'dis'
+    when "dis"
       return setDis(value)
-    when 'aur'
+    when "aur"
       return setAur(value)
-    when 'log'
+    when "log"
       return setLog(value)
-    when 'int'
+    when "int"
       return setInt(value)
-    when 'wis'
+    when "wis"
       return setWis(value)
-    when 'inf'
+    when "inf"
       return setInf(value)
     end
   end

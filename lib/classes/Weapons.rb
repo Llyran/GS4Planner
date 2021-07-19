@@ -1,7 +1,7 @@
 require "sqlite3"
 
 class Weapons
-  DatabaseName = './data/test.db'
+  DatabaseName = "./data/test.db"
 
   #constructor
   def initialize
@@ -148,36 +148,36 @@ class Weapons
     results = db.query "SELECT * from Weapons where name=?", name
     result = results.next
 
-    dfAgainst = { cloth: result['df_vs_cloth'], leather: result['df_vs_leather'], scale: result['df_vs_scale'], chain: result['df_vs_chain'], plate: result['df_vs_plate'] }
+    dfAgainst = { cloth: result["df_vs_cloth"], leather: result["df_vs_leather"], scale: result["df_vs_scale"], chain: result["df_vs_chain"], plate: result["df_vs_plate"] }
 
-    result.delete('df_vs_cloth')
-    result.delete('df_vs_leather')
-    result.delete('df_vs_scale')
-    result.delete('df_vs_chain')
-    result.delete('df_vs_plate')
+    result.delete("df_vs_cloth")
+    result.delete("df_vs_leather")
+    result.delete("df_vs_scale")
+    result.delete("df_vs_chain")
+    result.delete("df_vs_plate")
 
-    aVd = { '1': result['avd_1'], '2': result['avd_2'], '5': result['avd_5'], '6': result['avd_6'], '7': result['avd_7'], '8': result['avd_8'], '9': result['avd_9'],
-                        '10': result['avd_10'], '11': result['avd_11'], '12': result['avd_12'], '13': result['avd_13'], '14': result['avd_14'], '15': result['avd_15'],
-                        '16': result['avd_16'], '17': result['avd_17'], '18': result['avd_18'], '19': result['avd_19'], '20': result['avd_20'] }
+    aVd = { "1": result["avd_1"], "2": result["avd_2"], "5": result["avd_5"], "6": result["avd_6"], "7": result["avd_7"], "8": result["avd_8"], "9": result["avd_9"],
+                        "10": result["avd_10"], "11": result["avd_11"], "12": result["avd_12"], "13": result["avd_13"], "14": result["avd_14"], "15": result["avd_15"],
+                        "16": result["avd_16"], "17": result["avd_17"], "18": result["avd_18"], "19": result["avd_19"], "20": result["avd_20"] }
 
-    result.delete('avd_1')
-    result.delete('avd_2')
-    result.delete('avd_5')
-    result.delete('avd_6')
-    result.delete('avd_7')
-    result.delete('avd_8')
-    result.delete('avd_9')
-    result.delete('avd_10')
-    result.delete('avd_11')
-    result.delete('avd_12')
-    result.delete('avd_13')
-    result.delete('avd_14')
-    result.delete('avd_15')
-    result.delete('avd_16')
-    result.delete('avd_17')
-    result.delete('avd_18')
-    result.delete('avd_19')
-    result.delete('avd_20')
+    result.delete("avd_1")
+    result.delete("avd_2")
+    result.delete("avd_5")
+    result.delete("avd_6")
+    result.delete("avd_7")
+    result.delete("avd_8")
+    result.delete("avd_9")
+    result.delete("avd_10")
+    result.delete("avd_11")
+    result.delete("avd_12")
+    result.delete("avd_13")
+    result.delete("avd_14")
+    result.delete("avd_15")
+    result.delete("avd_16")
+    result.delete("avd_17")
+    result.delete("avd_18")
+    result.delete("avd_19")
+    result.delete("avd_20")
 
     result.merge!(dfAgainst)
     result.merge!(aVd)
