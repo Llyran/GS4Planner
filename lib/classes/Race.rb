@@ -3,9 +3,10 @@ require "sqlite3"
 require "./lib/classes/Statistics"
 
 class Race
+  DatabaseName = './data/test.db'
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
@@ -49,7 +50,7 @@ class Race
 
   # create SQLite3 table for races
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Creates the Races table. This will contain all the known information about every race in GS4
@@ -76,7 +77,7 @@ class Race
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from races"
   end
@@ -84,7 +85,7 @@ class Race
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM races"
   end
 
@@ -92,7 +93,7 @@ class Race
   def getRaceObjectFromDatabase(name)
     bonus = Statistics.new
     adjust = Statistics.new
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from races where name=?", name

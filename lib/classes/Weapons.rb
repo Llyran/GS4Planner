@@ -1,15 +1,16 @@
 require "sqlite3"
 
 class Weapons
+  DatabaseName = './data/test.db'
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
   # create SQLite3 table for races
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Creates the Weapons table which contains all the weapons and their attributes
@@ -127,7 +128,7 @@ class Weapons
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from Weapons";
   end
@@ -135,13 +136,13 @@ class Weapons
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM Weapons"
   end
 
   # Returns a hash based on the race passed in
   def getWeaponObjectFromDatabase(name)
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from Weapons where name=?", name

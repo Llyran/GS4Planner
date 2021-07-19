@@ -1,13 +1,14 @@
 require "sqlite3"
 
 class Skills
+  DatabaseName = './data/test.db'
+
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Creates the Skills table. This includes the name, type, subskill, redux value, and PTP/MTP costs and max ranks per level for every profession.
@@ -81,7 +82,7 @@ class Skills
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from Skills";
   end
@@ -89,13 +90,13 @@ class Skills
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM Skills"
   end
 
   # Returns a hash based on the race passed in
   def getSkillObjectFromDatabase(name)
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from Skills where name=?", name

@@ -3,9 +3,10 @@ require "sqlite3"
 require "./lib/classes/Statistics"
 
 class Profession
+  DatabaseName = './data/test.db'
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     # If the professions table doesn't exist, lets create it.
     createDatabaseTable
   end
@@ -68,7 +69,7 @@ class Profession
   # createDatabase table
   def createDatabaseTable
 
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.execute "CREATE TABLE IF NOT EXISTS Professions (name, type,  prime_statistics1, prime_statistics2,  mana_statistic1,  mana_statistic2, spell_circle1, spell_circle2, spell_circle3, guild_skill1, guild_skill2, guild_skill3, guild_skill4, guild_skill5, guild_skill6,  strength_growth, constitution_growth, dexterity_growth, agility_growth, discipline_growth, aura_growth, logic_growth, intuition_growth, wisdom_growth, influence_growth)"
     results = db.get_first_value "SELECT Count() from professions";
@@ -90,7 +91,7 @@ class Profession
   # returns the number of rows in the professions table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from professions";
   end
@@ -98,14 +99,14 @@ class Profession
   # truncates the professions table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM professions"
   end
 
   # Returns a hash based on the profession passed in
   def getProfessionObjectFromDatabase(name)
     growth = Statistics.new
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from professions where name=?", name
