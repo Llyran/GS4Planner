@@ -139,36 +139,36 @@ class Statistics
   end
 
   def getStatNames
-    return {str: "Strength", con: "Constitution", dex: "Dexterity", agi: "Agility", dis: "Discipline",
-                  aur: "Aura", log: "Logic", int: "Intuition", wis: "Wisdom", inf: "Influence"}
+    return { str: "Strength", con: "Constitution", dex: "Dexterity", agi: "Agility", dis: "Discipline",
+             aur: "Aura", log: "Logic", int: "Intuition", wis: "Wisdom", inf: "Influence" }
   end
 
   def getStats
-    {str: @str, con: @con, dex: @dex, agi: @agi, dis: @dis,
-     aur: @aur, log: @log, int: @int, wis: @wis, inf: @inf}
+    { str: @str, con: @con, dex: @dex, agi: @agi, dis: @dis,
+      aur: @aur, log: @log, int: @int, wis: @wis, inf: @inf }
   end
 
   def getStat(stat)
     case stat
-    when "str"
+    when "str", "Strength"
       return getStr
-    when "con"
+    when "con", "Constitution"
       return getCon
-    when "dex"
+    when "dex", "Dexterity"
       return getDex
-    when "agi"
+    when "agi", "Agility"
       return getAgi
-    when "dis"
+    when "dis", "Discipline"
       return getDis
-    when "aur"
+    when "aur", "Aura"
       return getAur
-    when "log"
+    when "log", "Logic"
       return getLog
-    when "int"
+    when "int", "Intuition"
       return getInt
-    when "wis"
+    when "wis", "Wisdom"
       return getWis
-    when "inf"
+    when "inf", "Influence"
       return getInf
     end
   end
