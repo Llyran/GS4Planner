@@ -1,15 +1,16 @@
 require "sqlite3"
 
 class Armor
+  DatabaseName = "./data/test.db"
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
   # create SQLite3 table for races
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Creates the Armor table.
@@ -50,7 +51,7 @@ class Armor
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from Armor";
   end
@@ -58,41 +59,41 @@ class Armor
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM Armor"
   end
 
   # Returns a hash based on the race passed in
   def getArmorObjectFromDatabase(name)
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from Armor where name=?", name
     result = results.next
 
     spell_hindrance = {
-      minor_spiritual: result['minor_spiritual_spell_hindrance'], major_spiritual: result['major_spiritual_spell_hindrance'], cleric: result['cleric_spell_hindrance'],
-      minor_elemental: result['minor_elemental_spell_hindrance'], minor_mental: result['minor_elemental_spell_hindrance'], major_elemental: result['major_elemental_spell_hindrance'],
-      major_mental: result['major_mental_spell_hindrance'], savant: result['savant_spell_hindrance'], ranger: result['ranger_spell_hindrance'],
-      sorcerer: result['sorcerer_spell_hindrance'], wizard: result['wizard_spell_hindrance'], bard: result['bard_spell_hindrance'], empath: result['empath_spell_hindrance'],
-      paladin: result['paladin_spell_hindrance'], max: result['max_spell_hindrance']
+      minor_spiritual: result["minor_spiritual_spell_hindrance"], major_spiritual: result["major_spiritual_spell_hindrance"], cleric: result["cleric_spell_hindrance"],
+      minor_elemental: result["minor_elemental_spell_hindrance"], minor_mental: result["minor_elemental_spell_hindrance"], major_elemental: result["major_elemental_spell_hindrance"],
+      major_mental: result["major_mental_spell_hindrance"], savant: result["savant_spell_hindrance"], ranger: result["ranger_spell_hindrance"],
+      sorcerer: result["sorcerer_spell_hindrance"], wizard: result["wizard_spell_hindrance"], bard: result["bard_spell_hindrance"], empath: result["empath_spell_hindrance"],
+      paladin: result["paladin_spell_hindrance"], max: result["max_spell_hindrance"]
     }
 
-    result.delete('minor_spiritual_spell_hindrance')
-    result.delete('major_spiritual_spell_hindrance')
-    result.delete('cleric_spell_hindrance')
-    result.delete('minor_elemental_spell_hindrance')
-    result.delete('minor_elemental_spell_hindrance')
-    result.delete('major_elemental_spell_hindrance')
-    result.delete('major_mental_spell_hindrance')
-    result.delete('savant_spell_hindrance')
-    result.delete('ranger_spell_hindrance')
-    result.delete('sorcerer_spell_hindrance')
-    result.delete('wizard_spell_hindrance')
-    result.delete('bard_spell_hindrance')
-    result.delete('empath_spell_hindrance')
-    result.delete('paladin_spell_hindrance')
-    result.delete('max_spell_hindrance')
+    result.delete("minor_spiritual_spell_hindrance")
+    result.delete("major_spiritual_spell_hindrance")
+    result.delete("cleric_spell_hindrance")
+    result.delete("minor_elemental_spell_hindrance")
+    result.delete("minor_elemental_spell_hindrance")
+    result.delete("major_elemental_spell_hindrance")
+    result.delete("major_mental_spell_hindrance")
+    result.delete("savant_spell_hindrance")
+    result.delete("ranger_spell_hindrance")
+    result.delete("sorcerer_spell_hindrance")
+    result.delete("wizard_spell_hindrance")
+    result.delete("bard_spell_hindrance")
+    result.delete("empath_spell_hindrance")
+    result.delete("paladin_spell_hindrance")
+    result.delete("max_spell_hindrance")
 
     result.merge!(spell_hindrance: spell_hindrance)
 

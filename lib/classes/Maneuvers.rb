@@ -1,15 +1,16 @@
 require "sqlite3"
 
 class Maneuvers
+  DatabaseName = "./data/test.db"
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
   # create SQLite3 table for races
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Creates the Maneuvers table. This table contains every Combat Maneuver, Shield Maneuver, and Armor Specializion. The base costs, profession availability, and prerequisites are also in this table.
@@ -147,7 +148,7 @@ class Maneuvers
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from Maneuvers"
   end
@@ -155,44 +156,44 @@ class Maneuvers
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM Maneuvers"
   end
 
   # Returns a hash based on the race passed in
   def getManeuverObjectFromDatabase(name)
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from Maneuvers where name=?", name
     result = results.next
 
-    cost = {ranks: result['ranks'], rank1: result['cost_rank1'], rank2: result['cost_rank2'], rank3: result['cost_rank3'], rank4: result['cost_rank4'], rank5: result['cost_rank5']}
+    cost = {ranks: result["ranks"], rank1: result["cost_rank1"], rank2: result["cost_rank2"], rank3: result["cost_rank3"], rank4: result["cost_rank4"], rank5: result["cost_rank5"]}
 
-    result.delete('ranks')
-    result.delete('cost_rank1')
-    result.delete('cost_rank2')
-    result.delete('cost_rank3')
-    result.delete('cost_rank4')
-    result.delete('cost_rank5')
+    result.delete("ranks")
+    result.delete("cost_rank1")
+    result.delete("cost_rank2")
+    result.delete("cost_rank3")
+    result.delete("cost_rank4")
+    result.delete("cost_rank5")
 
-    available = {bard: result['available_bard'], cleric: result['available_cleric'], empath: result['available_empath'], monk: result['available_monk'],
-                 paladin: result['available_paladin'], ranger: result['available_ranger'], rogue: result['available_rogue'], savant: result['available_savant'],
-                 sorcerer: result['available_sorcerer'], warrior: result['available_warrior'], wizard: result['available_wizard']}
+    available = {bard: result["available_bard"], cleric: result["available_cleric"], empath: result["available_empath"], monk: result["available_monk"],
+                 paladin: result["available_paladin"], ranger: result["available_ranger"], rogue: result["available_rogue"], savant: result["available_savant"],
+                 sorcerer: result["available_sorcerer"], warrior: result["available_warrior"], wizard: result["available_wizard"]}
 
    # available_bard, available_cleric, available_empath, available_monk, available_paladin, available_ranger, available_rogue, available_savant,
     # available_sorcerer, available_warrior, available_wizard
-    result.delete('available_bard')
-    result.delete('available_cleric')
-    result.delete('available_empath')
-    result.delete('available_monk')
-    result.delete('available_paladin')
-    result.delete('available_ranger')
-    result.delete('available_rogue')
-    result.delete('available_savant')
-    result.delete('available_sorcerer')
-    result.delete('available_warrior')
-    result.delete('available_wizard')
+    result.delete("available_bard")
+    result.delete("available_cleric")
+    result.delete("available_empath")
+    result.delete("available_monk")
+    result.delete("available_paladin")
+    result.delete("available_ranger")
+    result.delete("available_rogue")
+    result.delete("available_savant")
+    result.delete("available_sorcerer")
+    result.delete("available_warrior")
+    result.delete("available_wizard")
 
     result.merge!(cost: cost)
     result.merge!(available: available)

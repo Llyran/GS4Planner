@@ -1,13 +1,14 @@
 require "sqlite3"
 
 class Summations
+  DatabaseName = "./data/test.db"
+
   def initialize
-    @DatabaseName = './data/test.db'
     createDatabaseTable
   end
 
   def createDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     # Lore Summations
@@ -411,7 +412,7 @@ class Summations
   # returns the number of rows in the races table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from Summations";
   end
@@ -419,13 +420,13 @@ class Summations
   # truncates the races table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM Summations"
   end
 
   # Returns a hash based on the race passed in
   def getSummationObjectFromDatabase(name)
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from Summations where effect_name=?", name

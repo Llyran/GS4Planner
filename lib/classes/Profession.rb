@@ -1,11 +1,12 @@
-# The Profession object hold all the information for the character's current profession. This does not include skill costs or max ranks
+# The Profession object hold all the information for the character"s current profession. This does not include skill costs or max ranks
 require "sqlite3"
 require "./lib/classes/Statistics"
 
 class Profession
+  DatabaseName = "./data/test.db"
+
   #constructor
   def initialize
-    @DatabaseName = './data/test.db'
     # If the professions table doesn't exist, lets create it.
     createDatabaseTable
   end
@@ -68,7 +69,7 @@ class Profession
   # createDatabase table
   def createDatabaseTable
 
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.execute "CREATE TABLE IF NOT EXISTS Professions (name, type,  prime_statistics1, prime_statistics2,  mana_statistic1,  mana_statistic2, spell_circle1, spell_circle2, spell_circle3, guild_skill1, guild_skill2, guild_skill3, guild_skill4, guild_skill5, guild_skill6,  strength_growth, constitution_growth, dexterity_growth, agility_growth, discipline_growth, aura_growth, logic_growth, intuition_growth, wisdom_growth, influence_growth)"
     results = db.get_first_value "SELECT Count() from professions";
@@ -90,7 +91,7 @@ class Profession
   # returns the number of rows in the professions table.
   #   Used to see if we need to populate the table, and input for unit testing
   def getRowCount
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
     db.get_first_value "SELECT Count() from professions";
   end
@@ -98,64 +99,64 @@ class Profession
   # truncates the professions table
   #   Used primarily for unit testing
   def resetDatabaseTable
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.execute "DELETE FROM professions"
   end
 
   # Returns a hash based on the profession passed in
   def getProfessionObjectFromDatabase(name)
     growth = Statistics.new
-    db = SQLite3::Database.open @DatabaseName
+    db = SQLite3::Database.open DatabaseName
     db.results_as_hash = true
 
     results = db.query "SELECT * from professions where name=?", name
     result = results.next
 
-    spell_circles = { circle1: result['spell_circle1'], circle2: result['spell_circle2'], circle3: result['spell_circle3'] }
+    spell_circles = { circle1: result["spell_circle1"], circle2: result["spell_circle2"], circle3: result["spell_circle3"] }
 
-    result.delete('spell_circle1')
-    result.delete('spell_circle2')
-    result.delete('spell_circle3')
+    result.delete("spell_circle1")
+    result.delete("spell_circle2")
+    result.delete("spell_circle3")
 
-    prime = { stat1: result['prime_statistics1'], stat2: result['prime_statistics2'] }
+    prime = { stat1: result["prime_statistics1"], stat2: result["prime_statistics2"] }
 
-    result.delete('prime_statistics1')
-    result.delete('prime_statistics2')
+    result.delete("prime_statistics1")
+    result.delete("prime_statistics2")
 
-    mana = { stat1: result['mana_statistic1'], stat2: result['mana_statistic2'] }
+    mana = { stat1: result["mana_statistic1"], stat2: result["mana_statistic2"] }
 
-    result.delete('mana_statistic1')
-    result.delete('mana_statistic2')
+    result.delete("mana_statistic1")
+    result.delete("mana_statistic2")
 
-    growth.setStr(result['strength_growth'])
-    growth.setCon(result['constitution_growth'])
-    growth.setDex(result['dexterity_growth'])
-    growth.setAgi(result['agility_growth'])
-    growth.setDis(result['discipline_growth'])
-    growth.setAur(result['aura_growth'])
-    growth.setLog(result['logic_growth'])
-    growth.setInt(result['intuition_growth'])
-    growth.setWis(result['wisdom_growth'])
-    growth.setInf(result['influence_growth'])
+    growth.setStr(result["strength_growth"])
+    growth.setCon(result["constitution_growth"])
+    growth.setDex(result["dexterity_growth"])
+    growth.setAgi(result["agility_growth"])
+    growth.setDis(result["discipline_growth"])
+    growth.setAur(result["aura_growth"])
+    growth.setLog(result["logic_growth"])
+    growth.setInt(result["intuition_growth"])
+    growth.setWis(result["wisdom_growth"])
+    growth.setInf(result["influence_growth"])
 
-    result.delete('strength_growth')
-    result.delete('constitution_growth')
-    result.delete('dexterity_growth')
-    result.delete('agility_growth')
-    result.delete('discipline_growth')
-    result.delete('aura_growth')
-    result.delete('logic_growth')
-    result.delete('intuition_growth')
-    result.delete('wisdom_growth')
-    result.delete('influence_growth')
+    result.delete("strength_growth")
+    result.delete("constitution_growth")
+    result.delete("dexterity_growth")
+    result.delete("agility_growth")
+    result.delete("discipline_growth")
+    result.delete("aura_growth")
+    result.delete("logic_growth")
+    result.delete("intuition_growth")
+    result.delete("wisdom_growth")
+    result.delete("influence_growth")
 
-    guild = { skill1: result['guild_skill1'], skill2: result['guild_skill2'], skill3: result['guild_skill3'], skill4: result['guild_skill4'], skill5: result['guild_skill5'], skill6: result['guild_skill6'] }
-    result.delete('guild_skill1')
-    result.delete('guild_skill2')
-    result.delete('guild_skill3')
-    result.delete('guild_skill4')
-    result.delete('guild_skill5')
-    result.delete('guild_skill6')
+    guild = { skill1: result["guild_skill1"], skill2: result["guild_skill2"], skill3: result["guild_skill3"], skill4: result["guild_skill4"], skill5: result["guild_skill5"], skill6: result["guild_skill6"] }
+    result.delete("guild_skill1")
+    result.delete("guild_skill2")
+    result.delete("guild_skill3")
+    result.delete("guild_skill4")
+    result.delete("guild_skill5")
+    result.delete("guild_skill6")
 
     result.merge!(spell_circles: spell_circles)
     result.merge!(prime: prime)
