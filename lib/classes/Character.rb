@@ -176,27 +176,58 @@ class Character
 
   def getExperienceByLevel(level)
     experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, #0..25
-                   565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875, #26..50
-                   880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000, #51..75
-                   1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125] #76..100
+                  565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875, #26..50
+                  880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000, #51..75
+                  1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125] #76..100
 
     return experience[level] * 100
   end
 
+  def getStatBonus(stat)
+    # Bonus = ⌊(RawStat - 50)/2⌋ + RaceModifier
+    my_stat = @stats.getStat(stat)
+    race_modifier = getRace[:bonus].getStat(stat)
+    bonus = ((my_stat - 50) / 2) + race_modifier
+
+    return bonus
+  end
+
   def calcHealth(level)
-    return 0
+    base = []
+    str = calcGrowth("str")
+    con = calcGrowth("con")
+    gain = { Aelotoi: 5, "Burgal Gnome": 4, "Dark Elf": 5, Dwarf: 6, Elf: 5, Erithian: 5, "Forest Gnome": 4,
+             Giantman: 7, "Half Elf": 5, "Half Krolvin": 6, Halfling: 4, Human: 6, Sylviankind: 5 }
+    (0..100).each do |i|
+      base[i] = (str[i] + con[i]) / 10
+    end
+
+    return base
   end
 
   def calcMana(level)
-    return 0
+    s1 = getStatBonus(@profession[:mana][:stat1])
+    s2 = getStatBonus(@profession[:mana][:stat2])
+
+    if (s1 > 0 && s2 > 0)
+      return (s1 + s2) / 4
+    else
+      return s1 / 2
+    end
   end
 
   def calcStamina(level)
     return 0
   end
 
-  def calcSpirit(level)
-    return 0
+  def calcSpirit()
+    aur = []
+    my_aur = calcGrowth("aur")
+    (0..100).each do |i|
+      aur[i] = (my_aur[i] / 10.0).round
+    end
+
+    return aur
   end
 
   def calcGrowth(stat)
