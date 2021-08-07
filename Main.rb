@@ -1,6 +1,8 @@
 require 'fox16'
 include Fox
 
+require "json"
+
 require "./lib/classes/Race"
 require "./lib/classes/Profession"
 require "./lib/classes/Character"
@@ -86,6 +88,7 @@ class GS4CharacterManager < FXMainWindow
   def construct_stats_page(page, character)
     statistics = StatisticsPage.new(app)
     statistics.show_page(page, character)
+    puts character.inspect
   end
 
   # Stub for Skills page tab
