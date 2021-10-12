@@ -1,5 +1,5 @@
-class StatisticsPage
-  MAX_COLUMNS = 10
+class StatisticsPage < FXMainWindow
+  MAX_COLUMNS = 15
 
   def initialize(app)
     @app = app
