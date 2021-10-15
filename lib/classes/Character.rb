@@ -16,6 +16,7 @@ class Character
     # Statistics Panel variables
     @race = ""
     @profession = ""
+    @training = []
 
     # @race_list = {}; # Contains a list of Race objects using the name of each race name as a key
     # @profession_list = {}; # Contains a list of Profession objects using the name of each profession name as a key
@@ -245,6 +246,7 @@ class Character
       myGrowth = (myGrowth <= 1) ? 1 : myGrowth
 
       myStats[i] = (i % myGrowth == 0) ? myStats[i - 1] + 1 : myStats[i - 1]
+      myStats[i] = 100 if myStats[i] > 100
     end
 
     return myStats
@@ -308,11 +310,19 @@ class Character
     return my_string
   end
 
+  def addTraining(training)
+    puts training.inspect
+    @training.append(training)
+    puts @training.inspect
+  end
+
+  def getTraining()
+    @training
+  end
+
   # def update_statistics()  end
   #
   # def update_resources(level) end
-  #
-  # def is_prime_stat(stat) end
   #
   # def update_skills() end
   #

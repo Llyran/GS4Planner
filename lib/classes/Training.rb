@@ -9,11 +9,15 @@ class Training
 
   def addTrainingSkill(skill_name, cost, goal, start, target)
 
-    @skill = skill_name
+    @skill_name = skill_name
     @goal = goal
     @cost = cost
     @start = start
     @target = target
+  end
+
+  def getTraining
+    return { skill_name: @skill_name, goal: @goal, cost: @cost, start: @start, target: @target }
   end
 
   def setGoal(goal)
