@@ -4,7 +4,7 @@ class LoadoutPage < FXMainWindow
   end
 
   def show_page(page)
-    form = FXMatrix.new(form, 2, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
+    form = FXMatrix.new(page, 2, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
     lbl = FXLabel.new(form, "Loadout page:")
     lbl.font = FXFont.new(@app, "Arial", 24)
   end
