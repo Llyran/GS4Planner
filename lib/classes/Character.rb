@@ -184,6 +184,10 @@ class Character
     return experience[level] * 100
   end
 
+  def getRaceModifier(stat)
+   getRace[:bonus].getStat(stat)
+  end
+
   def getStatBonus(stat)
     # Bonus = ⌊(RawStat - 50)/2⌋ + RaceModifier
     my_stat = @stats.getStat(stat)

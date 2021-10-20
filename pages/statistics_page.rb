@@ -1,5 +1,5 @@
 class StatisticsPage < FXMainWindow
-  MAX_COLUMNS = 100
+  MAX_COLUMNS = 25
 
   def initialize(app)
     @app = app
@@ -97,7 +97,7 @@ class StatisticsPage < FXMainWindow
 
   def stat_data_changed(val, stat, character, matrixR, row)
     my_value = val.to_i
-    return if my_value <= 20 || my_value > 100
+    return if my_value < 20 || my_value > 100
 
     character.getStats.setStat(stat, my_value)
     update_data_row(stat, row, character, matrixR)
@@ -107,10 +107,12 @@ class StatisticsPage < FXMainWindow
 
   def update_data_row(stat, row, character, matrixR)
     growth = character.calcGrowth(stat)
+    raceModifier = character.getRaceModifier(stat)
 
     (0..MAX_COLUMNS).each_with_index do |value, index|
+      bonus = calcBonus(growth[index], raceModifier)
       cell = matrixR.childAtRowCol(row, index)
-      cell.text = growth[index].to_s
+      cell.text = growth[index].to_s + bonus
 
       if (index > 0 && growth[index - 1] != growth[index])
         cell.backColor = "Green"
@@ -119,6 +121,13 @@ class StatisticsPage < FXMainWindow
       end
 
     end
+  end
+
+  # Bonus = ⌊(RawStat - 50)/2⌋ + RaceModifier
+  def calcBonus(growth, raceModifier)
+    myGrowth = (growth - 50 >= 0) ? growth - 50 : growth - 49
+    bonus = (myGrowth / 2) + raceModifier
+    "  " + bonus.to_s
   end
 
   def update_total_rows(character, matrixR)
@@ -246,8 +255,10 @@ class StatisticsPage < FXMainWindow
     createTextField(matrixL, matrixR, my_stat, character)
 
     growth = character.calcGrowth(my_stat)
+    raceModifier = character.getRaceModifier(my_stat)
     (0..MAX_COLUMNS).each { |i|
-      lbl = FXLabel.new(matrixR, growth[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+      bonus = calcBonus(growth[i], raceModifier)
+      lbl = FXLabel.new(matrixR, growth[i].to_s + bonus, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
       lbl.borderColor = "White"
       lbl.font = FXFont.new(@app, "Arial", 14)
 
