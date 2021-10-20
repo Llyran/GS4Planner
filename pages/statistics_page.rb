@@ -22,7 +22,7 @@ class StatisticsPage < FXMainWindow
     # frame_stats holds everything else
     frame_stats = FXHorizontalFrame.new(page)
 
-    matrix_frame =  FXMatrix.new(frame_stats, 1, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
+    matrix_frame = FXMatrix.new(frame_stats, 1, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
     matrixL = FXMatrix.new(matrix_frame, 4, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
     scroll_window = FXScrollWindow.new(frame_stats, LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_FIX_WIDTH | LAYOUT_FIX_HEIGHT, :width => 1000, :height => 710)
     matrixR = FXMatrix.new(scroll_window, MAX_COLUMNS + 1, MATRIX_BY_COLUMNS)
@@ -78,7 +78,6 @@ class StatisticsPage < FXMainWindow
     lbl.font = FXFont.new(@app, "Arial", 14)
 
     # Scrolling region, right section of display
-
     (0..MAX_COLUMNS).each do |i|
       lbl = FXLabel.new(matrixR, i.to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
       lbl.borderColor = "White"
@@ -91,22 +90,22 @@ class StatisticsPage < FXMainWindow
       create_detail_matrix(matrixL, matrixR, character, stat.to_s)
     end
 
-    create_bottom_matrix(matrix_frame, matrixL, matrixR, character)
+    create_bottom_matrix(matrix_frame, matrixR, character)
   end
 
   private
 
-  def stat_data_changed(val, stat, character, matrixL, matrixR, row)
+  def stat_data_changed(val, stat, character, matrixR, row)
     my_value = val.to_i
     return if my_value <= 20 || my_value > 100
 
     character.getStats.setStat(stat, my_value)
-    update_data_row(stat, row, character, matrixL, matrixR)
-    update_total_rows(character, matrixL, matrixR)
-    update_points_rows(character, matrixL, matrixR)
+    update_data_row(stat, row, character, matrixR)
+    update_total_rows(character, matrixR)
+    update_points_rows(character, matrixR)
   end
 
-  def update_data_row(stat, row, character, matrixL, matrixR)
+  def update_data_row(stat, row, character, matrixR)
     growth = character.calcGrowth(stat)
 
     (0..MAX_COLUMNS).each_with_index do |value, index|
@@ -122,7 +121,7 @@ class StatisticsPage < FXMainWindow
     end
   end
 
-  def update_total_rows(character, matrixL, matrixR)
+  def update_total_rows(character, matrixR)
     growth_str = character.calcGrowth("str")
     growth_con = character.calcGrowth("con")
     growth_dex = character.calcGrowth("dex")
@@ -143,6 +142,7 @@ class StatisticsPage < FXMainWindow
       stat_total[i] = growth_str[i] + growth_con[i] + growth_dex[i] + growth_agi[i] + growth_dis[i] +
         growth_aur[i] + growth_log[i] + growth_int[i] + growth_wis[i] + growth_inf[i]
 
+      # TODO Figure out a way to do this in bulk, instead of inside a loop
       stat_ptp[i] = character.getPtp_by_stats(growth_aur[i], growth_dis[i], growth_str[i], growth_con[i], growth_dex[i], growth_agi[i])
       stat_mtp[i] = character.getMtp_by_stats(growth_aur[i], growth_dis[i], growth_log[i], growth_int[i], growth_wis[i], growth_inf[i])
 
@@ -167,7 +167,7 @@ class StatisticsPage < FXMainWindow
 
   end
 
-  def update_points_rows(character, matrixL, matrixR)
+  def update_points_rows(character, matrixR)
     health = character.calcHealth(0)
     spirit = character.calcSpirit
     (0..MAX_COLUMNS).each do |i|
@@ -189,10 +189,10 @@ class StatisticsPage < FXMainWindow
       sub = matrixL.childAtRowCol(row, 1)
       sub.text = my_bonus.to_s
 
-      update_data_row(stat.to_s, row, character, matrixL, matrixR)
+      update_data_row(stat.to_s, row, character, matrixR)
     end
-    update_total_rows(character, matrixL, matrixR)
-    update_points_rows(character, matrixL, matrixR)
+    update_total_rows(character, matrixR)
+    update_points_rows(character, matrixR)
   end
 
   def update_growth_index(character, matrixL, matrixR)
@@ -204,10 +204,10 @@ class StatisticsPage < FXMainWindow
       sub = matrixL.childAtRowCol(0, 2)
       sub.text = my_growth.to_s
 
-      update_data_row(stat.to_s, row, character, matrixL, matrixR)
+      update_data_row(stat.to_s, row, character, matrixR)
     end
-    update_total_rows(character, matrixL, matrixR)
-    update_points_rows(character, matrixL, matrixR)
+    update_total_rows(character, matrixR)
+    update_points_rows(character, matrixR)
   end
 
   # Creates a stat label, with indicators for prime and mana stats
@@ -225,23 +225,15 @@ class StatisticsPage < FXMainWindow
   end
 
   # Creates the detail matrix.  This holds the stats array display code
-  # @param [Object] matrix Main display element for the stats page
+  # @param [Object] matrixL Main display element for the stats page
+  # @param [Object] matrixR Main display element for the stats page
   # @param [Object] character Common character object
   # @param [Object] my_stat one of the short stat representations
   def create_detail_matrix(matrixL, matrixR, character, my_stat)
-    rows = { str: 1, con: 2, dex: 3, agi: 4, dis: 5, aur: 6, log: 7, int: 8, wis: 9, inf: 10 }
-
     bonus = character.getRace[:bonus]
-    stats = character.getStats
-
-    row = rows[my_stat.to_sym]
-
-    my_stats = stats.getStat(my_stat)
     my_bonus = bonus.getStat(my_stat)
     my_growth = character.getGrowthIndex(my_stat)
 
-    # matrixL = FXMatrix.new(matrix, 6, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
-    matrixL.borderColor = "White"
     lbl = FXLabel.new(matrixL, create_label(my_stat, character), :width => 180, :opts => JUSTIFY_LEFT | LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_FILL_X)
     lbl.borderColor = "white"
     lbl.font = FXFont.new(@app, "Arial", 14,)
@@ -275,7 +267,7 @@ class StatisticsPage < FXMainWindow
 
     case stat
     when "str"
-      str_data = FXDataTarget.new(my_stat)
+      str_data = FXDataTarget.new(my_stat.to_s)
       str_text = FXTextField.new(matrixL, 4, :target => str_data, :selector => FXDataTarget::ID_VALUE,
                                  :opts => JUSTIFY_RIGHT | LAYOUT_CENTER_X | LAYOUT_CENTER_Y | FRAME_LINE | TEXTFIELD_INTEGER)
       str_text.backColor = "White"
@@ -283,7 +275,7 @@ class StatisticsPage < FXMainWindow
       str_text.font = FXFont.new(@app, "Arial", 14)
       str_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(str_text)
-        stat_data_changed(str_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(str_data.value, stat, character, matrixR, my_row)
       end
 
     when "con"
@@ -295,7 +287,7 @@ class StatisticsPage < FXMainWindow
       con_text.font = FXFont.new(@app, "Arial", 14)
       con_data.connect(SEL_COMMAND) do |sender, sel, tentative|
         my_row = matrixL.rowOfChild(con_text)
-        stat_data_changed(con_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(con_data.value, stat, character, matrixR, my_row)
       end
 
     when "dex"
@@ -307,7 +299,7 @@ class StatisticsPage < FXMainWindow
       dex_text.font = FXFont.new(@app, "Arial", 14)
       dex_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(dex_text)
-        stat_data_changed(dex_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(dex_data.value, stat, character, matrixR, my_row)
       end
 
     when "agi"
@@ -319,7 +311,7 @@ class StatisticsPage < FXMainWindow
       agi_text.font = FXFont.new(@app, "Arial", 14)
       agi_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(agi_text)
-        stat_data_changed(agi_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(agi_data.value, stat, character, matrixR, my_row)
       end
 
     when "dis"
@@ -331,7 +323,7 @@ class StatisticsPage < FXMainWindow
       dis_text.font = FXFont.new(@app, "Arial", 14)
       dis_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(dis_text)
-        stat_data_changed(dis_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(dis_data.value, stat, character, matrixR, my_row)
       end
 
     when "aur"
@@ -343,7 +335,7 @@ class StatisticsPage < FXMainWindow
       aur_text.font = FXFont.new(@app, "Arial", 14)
       aur_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(aur_text)
-        stat_data_changed(aur_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(aur_data.value, stat, character, matrixR, my_row)
       end
 
     when "log"
@@ -355,7 +347,7 @@ class StatisticsPage < FXMainWindow
       log_text.font = FXFont.new(@app, "Arial", 14)
       log_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(log_text)
-        stat_data_changed(log_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(log_data.value, stat, character, matrixR, my_row)
       end
 
     when "int"
@@ -367,7 +359,7 @@ class StatisticsPage < FXMainWindow
       int_text.font = FXFont.new(@app, "Arial", 14)
       int_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(int_text)
-        stat_data_changed(int_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(int_data.value, stat, character, matrixR, my_row)
       end
 
     when "wis"
@@ -379,7 +371,7 @@ class StatisticsPage < FXMainWindow
       wis_text.font = FXFont.new(@app, "Arial", 14)
       wis_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(wis_text)
-        stat_data_changed(wis_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(wis_data.value, stat, character, matrixR, my_row)
       end
 
     when "inf"
@@ -391,16 +383,16 @@ class StatisticsPage < FXMainWindow
       inf_text.font = FXFont.new(@app, "Arial", 14)
       inf_data.connect(SEL_COMMAND) do
         my_row = matrixL.rowOfChild(inf_text)
-        stat_data_changed(inf_data.value, stat, character, matrixL, matrixR, my_row)
+        stat_data_changed(inf_data.value, stat, character, matrixR, my_row)
       end
     end
 
   end
 
   # This creates the totals containers at the bottom of the stats matrix
-  # @param [Object] matrixL
+  # @param [Object] matrixR
   # @param [Object] character
-  def create_bottom_matrix(mat_frame, matrixL, matrixR, character)
+  def create_bottom_matrix(mat_frame, matrixR, character)
     totals = ["Statistics Total", "PTP", "MTP", "Experience until next level", "Total Experience", " "]
     points = ["Health", "Mana", "Stamina", "Spirit"]
 
@@ -436,12 +428,8 @@ class StatisticsPage < FXMainWindow
     totals.each_with_index do |title, idx|
       lbl = FXLabel.new(mat_frame, title, :opts => JUSTIFY_RIGHT | LAYOUT_FILL_X)
       lbl.font = FXFont.new(@app, "Arial", 14)
-      # lbl.backColor = "WhiteSmoke" if idx == 5
-
-      # lbl.backColor = "WhiteSmoke" if idx == 5
 
       (0..MAX_COLUMNS).each do |i|
-        # FXVerticalSeparator.new(matrixL).shadowColor = "White"
         if idx == 0
           lbl = FXLabel.new(matrixR, stat_total[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
@@ -488,7 +476,6 @@ class StatisticsPage < FXMainWindow
     points.each_with_index do |title, idx|
       lbl = FXLabel.new(mat_frame, title, :opts => JUSTIFY_RIGHT | LAYOUT_FILL_X)
       lbl.font = FXFont.new(@app, "Arial", 14)
-
 
       (0..MAX_COLUMNS).each do |i|
         lbl = FXLabel.new(matrixR, i.to_s, :width => 80,
