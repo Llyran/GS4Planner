@@ -16,7 +16,8 @@ class SkillsDialog < FXDialogBox
       :cost => FXDataTarget.new(" "),
       :goal => FXDataTarget.new(" "),
       :start => FXDataTarget.new(0),
-      :target => FXDataTarget.new(100)
+      :target => FXDataTarget.new(100),
+      :total_ranks => FXDataTarget.new(0)
     }
 
     skills = Skills.new
@@ -82,6 +83,10 @@ class SkillsDialog < FXDialogBox
                                 :opts => JUSTIFY_RIGHT | LAYOUT_CENTER_X | LAYOUT_CENTER_Y | FRAME_LINE)
     goal.font = FXFont.new(getApp(), "Arial", 14)
 
+    # Seperator
+    lbl = FXLabel.new(dialog_box, " ")
+    lbl = FXLabel.new(dialog_box, " ")
+
     #training range
     lbl = FXLabel.new(dialog_box, "Level Range")
     lbl.font = FXFont.new(getApp(), "Arial", 14)
@@ -99,6 +104,14 @@ class SkillsDialog < FXDialogBox
     range_target = FXTextField.new(range, 3, :target => @skill_attr[:target], :selector => FXDataTarget::ID_VALUE,
                                    :opts => JUSTIFY_RIGHT | LAYOUT_CENTER_X | LAYOUT_CENTER_Y | FRAME_LINE | TEXTFIELD_INTEGER)
     range_target.font = FXFont.new(getApp(), "Arial", 14)
+
+    lbl = FXLabel.new(dialog_box, "Total Ranks")
+    lbl.font = FXFont.new(getApp(), "Arial", 14)
+
+    total_ranks = FXTextField.new(dialog_box, 4, :target => @skill_attr[:total_ranks], :selector => FXDataTarget::ID_VALUE,
+                                  :opts => JUSTIFY_RIGHT | LAYOUT_CENTER_X | LAYOUT_CENTER_Y | FRAME_LINE)
+    total_ranks.font = FXFont.new(getApp(), "Arial", 14)
+
 
     # Seperator
     lbl = FXLabel.new(dialog_box, " ")
