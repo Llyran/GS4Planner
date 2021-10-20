@@ -1,6 +1,8 @@
 require 'fox16'
 include Fox
 
+require "json"
+
 require "./lib/classes/Race"
 require "./lib/classes/Profession"
 require "./lib/classes/Character"
@@ -23,7 +25,7 @@ class GS4CharacterManager < FXMainWindow
 
   def create
     super
-    show()
+    show(PLACEMENT_SCREEN)
   end
 
   # Creates a new character with default race Human, and default profession Warrior
@@ -32,8 +34,17 @@ class GS4CharacterManager < FXMainWindow
     profession = Profession.new
     character = Character.new
 
-    character.setProfession(profession.getProfessionObjectFromDatabase("Warrior"))
-    character.setRace(race.getRaceObjectFromDatabase("Human"))
+    character.setProfession(profession.getProfessionObjectFromDatabase("Paladin"))
+    character.setRace(race.getRaceObjectFromDatabase("Half Krolvin"))
+
+    # character.addTraining(training.addTrainingSkill(
+    #   dialog.skill_attr[:skill_name].value,
+    #   dialog.skill_attr[:cost].value,
+    #   dialog.skill_attr[:goal].value,
+    #   dialog.skill_attr[:start].value,
+    #   dialog.skill_attr[:target].value)
+    # )
+
 
     return character
   end
@@ -86,6 +97,7 @@ class GS4CharacterManager < FXMainWindow
   def construct_stats_page(page, character)
     statistics = StatisticsPage.new(app)
     statistics.show_page(page, character)
+    puts character.inspect
   end
 
   # Stub for Skills page tab

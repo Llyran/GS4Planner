@@ -16,6 +16,7 @@ class Character
     # Statistics Panel variables
     @race = ""
     @profession = ""
+    @training = []
 
     # @race_list = {}; # Contains a list of Race objects using the name of each race name as a key
     # @profession_list = {}; # Contains a list of Profession objects using the name of each profession name as a key
@@ -178,7 +179,7 @@ class Character
     experience = [0, 25, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, #0..25
                   565, 580, 595, 610, 625, 640, 655, 670, 685, 700, 715, 730, 745, 760, 775, 785, 795, 805, 815, 825, 835, 845, 855, 865, 875, #26..50
                   880, 885, 890, 895, 900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000, #51..75
-                  1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125] #76..100
+                  1005, 1010, 1015, 1020, 1025, 1030, 1035, 1040, 1045, 1050, 1055, 1060, 1065, 1070, 1075, 1080, 1085, 1090, 1095, 1100, 1105, 1110, 1115, 1120, 1125, 0] #76..100
 
     return experience[level] * 100
   end
@@ -245,6 +246,7 @@ class Character
       myGrowth = (myGrowth <= 1) ? 1 : myGrowth
 
       myStats[i] = (i % myGrowth == 0) ? myStats[i - 1] + 1 : myStats[i - 1]
+      myStats[i] = 100 if myStats[i] > 100
     end
 
     return myStats
@@ -308,11 +310,19 @@ class Character
     return my_string
   end
 
+  def addTraining(training)
+    puts training.inspect
+    @training.append(training)
+    puts @training.inspect
+  end
+
+  def getTraining()
+    @training
+  end
+
   # def update_statistics()  end
   #
   # def update_resources(level) end
-  #
-  # def is_prime_stat(stat) end
   #
   # def update_skills() end
   #

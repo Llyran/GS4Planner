@@ -61,11 +61,12 @@ class Weapons
       db.execute "INSERT INTO Weapons VALUES('Short Sword', 'Edged Weapons', 4, 3, 4, 'Slash/Puncture/Crush', '70/185',  .350, .240, .200, .150, .125,  40, 40,  36, 35, 34, 33,  30, 28, 26, 24,  25, 21, 17, 13,  25, 19, 13, 7) "
       db.execute "INSERT INTO Weapons VALUES('Whip-blade', 'Edged Weapons', 0, 2, 4, 'Slash', '30/100',  .333, .250, .225, .200, .175,  45, 45,  40, 39, 38, 37,  30, 28, 26, 24,  35, 31, 27, 23,  15, 9, 3, -3) "
 
-      # Polearm Weapons	 
+      # Polearm Weapons
+      db.execute "INSERT INTO Weapons VALUES('Awl-Pike','Polearm Weapons', 8, 9, 5, 'Puncture/Crush', '60/160', .600, .550, .575, .450, .350,  15, 15,  20, 19, 18, 17,  35, 33, 31, 29,  45, 41, 37, 33,  50, 44, 38, 32)"
       db.execute "INSERT INTO Weapons VALUES('Halberd', 'Polearm Weapons', 9, 6, 5, 'Slash/Crush/Puncture', '25/150',  .550, .400, .400, .300, .200,  30, 30,  30, 29, 28, 27,  31, 29, 27, 25,  32, 28, 24, 20,  32, 26, 20, 14) "
       db.execute "INSERT INTO Weapons VALUES('Hammer of Kai', 'Polearm Weapons', 9, 7, 5, 'Puncture/Crush', '50/190',  .550, .425, .450, .350, .250,  20, 20,  25, 24, 23, 22,  35, 33, 31, 29,  40, 36, 32, 28,  40, 34, 28, 22) "
       db.execute "INSERT INTO Weapons VALUES('Jeddart-axe', 'Polearm Weapons', 9, 6, 5, 'Slash/Crush', '25/150',  .550, .425, .425, .325, .250,  30, 30,  32, 31, 30, 29,  30, 28, 26, 24,  40, 36, 32, 28,  30, 24, 18, 12) "
-      db.execute "INSERT INTO Weapons VALUES('Lance', 'Polearm Weapons', 15, 9, 5, 'Puncture/Crush', '17/105',  .725, .525, .550, .475, .350,  35, 35,  38, 37, 36, 35,  39, 37, 35, 33,  53, 49, 45, 41,  50, 44, 38, 32) "
+      db.execute "INSERT INTO Weapons VALUES( 'Lance', 'Polearm Weapons', 15, 9, 5, 'Puncture/Crush', '17/105', .725, .525, .550, .475, .350,  35, 35,  38, 37, 36, 35,  39, 37, 35, 33,  53, 49, 45, 41,  50, 44, 38, 32) "
       db.execute "INSERT INTO Weapons VALUES('Naginata', 'Polearm Weapons', 0, 6, 5, 'Slash/Crush/Puncture', '25/150',  .550, .400, .400, .300, .200,  50, 50,  50, 49, 48, 47,  51, 49, 47, 45,  52, 48, 44, 40,  52, 46, 40, 34) "
       db.execute "INSERT INTO Weapons VALUES('Pilum', 'Polearm Weapons', 5, 3, 4, 'Slash/Puncture', '50/150',  .350, .250, .225, .175, .060,  30, 30,  27, 26, 25, 24,  22, 20, 18, 16,  23, 19, 15, 11,  15, 9, 3, -3) "
       db.execute "INSERT INTO Weapons VALUES('Spear, One-Handed', 'Polearm Weapons', 0, 5, 5, 'Slash/Puncture', '15/130',  .425, .325, .250, .250, .260,  27, 27,  29, 28, 27, 26,  27, 25, 23, 21,  30, 26, 22, 18,  25, 19, 13, 7) "
