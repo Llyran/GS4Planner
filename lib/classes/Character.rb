@@ -246,7 +246,7 @@ class Character
     #   Plan to do extensive testing against calculator at url
     #   https://web.archive.org/web/20190605204233/https://gs4chart.cfapps.io/
     for i in 1..100
-      myGrowth = myStats[i - 1] / growth_interval
+      myGrowth = (myStats[i - 1] / growth_interval).truncate
       myGrowth = (myGrowth <= 1) ? 1 : myGrowth
 
       myStats[i] = (i % myGrowth == 0) ? myStats[i - 1] + 1 : myStats[i - 1]

@@ -19,7 +19,7 @@ class GS4CharacterManager < FXMainWindow
 
   def initialize(app)
     character = newCharacter
-    super(app, "GS4 Character Generator", :width => 1560, :height => 900)
+    super(app, "GS4 Character Generator", :width => 1700, :height => 820)
     add_tab_book(character)
   end
 

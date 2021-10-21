@@ -1,5 +1,5 @@
 class StatisticsPage < FXMainWindow
-  MAX_COLUMNS = 25
+  MAX_COLUMNS = 100
 
   def initialize(app)
     @app = app
@@ -24,7 +24,7 @@ class StatisticsPage < FXMainWindow
 
     matrix_frame = FXMatrix.new(frame_stats, 1, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
     matrixL = FXMatrix.new(matrix_frame, 4, :opts => MATRIX_BY_COLUMNS | LAYOUT_FILL_X)
-    scroll_window = FXScrollWindow.new(frame_stats, LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_FIX_WIDTH | LAYOUT_FIX_HEIGHT, :width => 1000, :height => 710)
+    scroll_window = FXScrollWindow.new(frame_stats, LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_FIX_WIDTH | LAYOUT_FIX_HEIGHT, :width => 1140, :height => 710)
     matrixR = FXMatrix.new(scroll_window, MAX_COLUMNS + 1, MATRIX_BY_COLUMNS)
 
     # This is the start of the choose race/profession dropdown container frame
@@ -79,7 +79,7 @@ class StatisticsPage < FXMainWindow
 
     # Scrolling region, right section of display
     (0..MAX_COLUMNS).each do |i|
-      lbl = FXLabel.new(matrixR, i.to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+      lbl = FXLabel.new(matrixR, i.to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
       lbl.borderColor = "White"
       lbl.font = FXFont.new(@app, "Arial", 14)
       lbl.backColor = "Black"
@@ -125,9 +125,10 @@ class StatisticsPage < FXMainWindow
 
   # Bonus = ⌊(RawStat - 50)/2⌋ + RaceModifier
   def calcBonus(growth, raceModifier)
-    myGrowth = (growth - 50 >= 0) ? growth - 50 : growth - 49
-    bonus = (myGrowth / 2) + raceModifier
-    "  " + bonus.to_s
+    # myGrowth = (growth - 50 >= 0) ? growth - 50 : growth - 49
+    # bonus = (myGrowth / 2) + raceModifier
+    bonus = ((growth - 50) / 2.0).truncate + raceModifier
+    "   " + bonus.to_s
   end
 
   def update_total_rows(character, matrixR)
@@ -210,7 +211,7 @@ class StatisticsPage < FXMainWindow
     rows.each_pair do |stat, row|
       my_growth = character.getGrowthIndex(stat.to_s)
 
-      sub = matrixL.childAtRowCol(0, 2)
+      sub = matrixL.childAtRowCol(row, 2)
       sub.text = my_growth.to_s
 
       update_data_row(stat.to_s, row, character, matrixR)
@@ -258,7 +259,7 @@ class StatisticsPage < FXMainWindow
     raceModifier = character.getRaceModifier(my_stat)
     (0..MAX_COLUMNS).each { |i|
       bonus = calcBonus(growth[i], raceModifier)
-      lbl = FXLabel.new(matrixR, growth[i].to_s + bonus, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+      lbl = FXLabel.new(matrixR, growth[i].to_s + bonus, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
       lbl.borderColor = "White"
       lbl.font = FXFont.new(@app, "Arial", 14)
 
@@ -442,12 +443,12 @@ class StatisticsPage < FXMainWindow
 
       (0..MAX_COLUMNS).each do |i|
         if idx == 0
-          lbl = FXLabel.new(matrixR, stat_total[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, stat_total[i].to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
           lbl.font = FXFont.new(@app, "Arial", 14)
         end
         if idx == 1
-          lbl = FXLabel.new(matrixR, stat_ptp[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, stat_ptp[i].to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
           lbl.font = FXFont.new(@app, "Arial", 14)
           if (i > 0 && stat_ptp[i - 1] != stat_ptp[i])
@@ -455,7 +456,7 @@ class StatisticsPage < FXMainWindow
           end
         end
         if idx == 2
-          lbl = FXLabel.new(matrixR, stat_mtp[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, stat_mtp[i].to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
           lbl.font = FXFont.new(@app, "Arial", 14)
           if (i > 0 && stat_mtp[i - 1] != stat_mtp[i])
@@ -463,19 +464,19 @@ class StatisticsPage < FXMainWindow
           end
         end
         if idx == 3
-          lbl = FXLabel.new(matrixR, exp_lvl[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, exp_lvl[i].to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
           lbl.backColor = "White"
           lbl.font = FXFont.new(@app, "Arial", 12)
         end
         if idx == 4
-          lbl = FXLabel.new(matrixR, total_exp[i].to_s, :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, total_exp[i].to_s, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = "White"
           lbl.backColor = "White"
           lbl.font = FXFont.new(@app, "Arial", 12)
         end
         if idx == 5
-          lbl = FXLabel.new(matrixR, " ", :width => 80, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+          lbl = FXLabel.new(matrixR, " ", :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
           lbl.borderColor = Fox.FXRGB(212, 208, 200)
           # lbl.backColor = "WhiteSmoke"
         end
@@ -489,7 +490,7 @@ class StatisticsPage < FXMainWindow
       lbl.font = FXFont.new(@app, "Arial", 14)
 
       (0..MAX_COLUMNS).each do |i|
-        lbl = FXLabel.new(matrixR, i.to_s, :width => 80,
+        lbl = FXLabel.new(matrixR, i.to_s, :width => 100,
                           :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
 
         lbl.text = health[i].to_s if (title == "Health")
