@@ -1,3 +1,5 @@
+require "./lib/classes/Stat"
+
 class StatisticsPage < FXMainWindow
   MAX_COLUMNS = 100
 
@@ -6,6 +8,9 @@ class StatisticsPage < FXMainWindow
   end
 
   def show_page(page, character)
+    # GS4CharacterManager.statsStorage[:test] = Array['test']
+    # puts GS4CharacterManager.statsStorage.inspect
+
     stats = character.getStats
     stat_names = stats.getStatNames
 
@@ -33,7 +38,7 @@ class StatisticsPage < FXMainWindow
     race = FXComboBox.new(frame_top, 10, :opts => COMBOBOX_NO_REPLACE | FRAME_SUNKEN | FRAME_THICK | LAYOUT_FILL_X)
     race.numVisible = my_races.length
     race.font = FXFont.new(@app, "Arial", 14)
-    my_races.each { |name| race.appendItem(name) }
+    my_races.each do |name| race.appendItem(name) end
     race.currentItem = race.findItem(character.getRace['name'])
 
     race.connect(SEL_COMMAND) do |sender, sel, data|
@@ -47,13 +52,14 @@ class StatisticsPage < FXMainWindow
     profession = FXComboBox.new(frame_top, 10, :opts => COMBOBOX_NO_REPLACE | FRAME_SUNKEN | FRAME_THICK | LAYOUT_FILL_X)
     profession.numVisible = my_professions.length
     profession.font = FXFont.new(@app, "Arial", 14)
-    my_professions.each { |name| profession.appendItem(name) }
+    my_professions.each do |name| profession.appendItem(name) end
     profession.currentItem = profession.findItem(character.getProfession['name'])
 
     profession.connect(SEL_COMMAND) do |sender, sel, data|
       myProfession = Profession.new
       character.setProfession(myProfession.getProfessionObjectFromDatabase(data))
       update_growth_index(character, matrixL, matrixR)
+      update_lables(character, matrixL)
     end
 
     # TOP OF STATISTICS COLUMNS
@@ -100,21 +106,44 @@ class StatisticsPage < FXMainWindow
     return if my_value < 20 || my_value > 100
 
     character.getStats.setStat(stat, my_value)
+
+    recalc_stat_data(character, stat, my_value)
+    # professionGrowth = character.getProfession[:growth].getStat(stat)
+    # raceAdjust = character.getRace[:adjust].getStat(stat)
+    # raceModifier = character.getRace[:bonus].getStat(stat)
+    #
+    # growth_interval = professionGrowth + raceAdjust
+    #
+    # storeIt = Stat.new(stat, my_value, growth_interval, raceModifier)
+    # growth = storeIt.calcGrowth
+    #
+    # GS4CharacterManager.statsStorage[stat.to_sym] = growth
+
     update_data_row(stat, row, character, matrixR)
     update_total_rows(character, matrixR)
     update_points_rows(character, matrixR)
   end
 
+  def recalc_stat_data(character, stat, value)
+    professionGrowth = character.getProfession[:growth].getStat(stat)
+    raceAdjust = character.getRace[:adjust].getStat(stat)
+    raceModifier = character.getRace[:bonus].getStat(stat)
+
+    growth_interval = professionGrowth + raceAdjust
+
+    storeIt = Stat.new(stat, value, growth_interval, raceModifier)
+    growth = storeIt.calcGrowth
+
+    GS4CharacterManager.statsStorage[stat.to_sym] = growth
+  end
+
   def update_data_row(stat, row, character, matrixR)
-    growth = character.calcGrowth(stat)
-    raceModifier = character.getRaceModifier(stat)
-
-    (0..MAX_COLUMNS).each_with_index do |value, index|
-      bonus = calcBonus(growth[index], raceModifier)
+    (0..MAX_COLUMNS).each do |index |
       cell = matrixR.childAtRowCol(row, index)
-      cell.text = growth[index].to_s + bonus
+      cell.text = GS4CharacterManager.statsStorage[stat.to_sym][:growth][index].to_s + "  (" +
+        GS4CharacterManager.statsStorage[stat.to_sym][:bonus][index].to_s + ")"
 
-      if (index > 0 && growth[index - 1] != growth[index])
+      if (index > 0 && GS4CharacterManager.statsStorage[stat.to_sym][:growth][index - 1] != GS4CharacterManager.statsStorage[stat.to_sym][:growth][index])
         cell.backColor = "Green"
       else
         cell.backColor = Fox.FXRGB(212, 208, 200)
@@ -123,38 +152,49 @@ class StatisticsPage < FXMainWindow
     end
   end
 
-  # Bonus = ⌊(RawStat - 50)/2⌋ + RaceModifier
-  def calcBonus(growth, raceModifier)
-    # myGrowth = (growth - 50 >= 0) ? growth - 50 : growth - 49
-    # bonus = (myGrowth / 2) + raceModifier
-    bonus = ((growth - 50) / 2.0).truncate + raceModifier
-    "   " + bonus.to_s
+  def update_data_rows(character)
+    rows = { str: 1, con: 2, dex: 3, agi: 4, dis: 5, aur: 6, log: 7, int: 8, wis: 9, inf: 10 }
+
+    rows.each_key do |stat |
+      professionGrowth = character.getProfession[:growth].getStats[stat]
+      raceAdjust = character.getRace[:adjust].getStats[stat]
+      growth_interval = professionGrowth + raceAdjust
+
+      raceModifier = character.getRace[:bonus].getStats[stat]
+
+      myStart = character.getStats.getStat(stat.to_s)
+
+      storeIt = Stat.new(stat, myStart, growth_interval, raceModifier)
+      growth = storeIt.calcGrowth
+
+      GS4CharacterManager.statsStorage[stat] = growth
+    end
+
   end
 
   def update_total_rows(character, matrixR)
-    growth_str = character.calcGrowth("str")
-    growth_con = character.calcGrowth("con")
-    growth_dex = character.calcGrowth("dex")
-    growth_agi = character.calcGrowth("agi")
-    growth_dis = character.calcGrowth("dis")
-    growth_aur = character.calcGrowth("aur")
-    growth_log = character.calcGrowth("log")
-    growth_int = character.calcGrowth("int")
-    growth_wis = character.calcGrowth("wis")
-    growth_inf = character.calcGrowth("inf")
-
     # this is the loop that populates the 0..100 arrays
     stat_total = []
     stat_ptp = []
     stat_mtp = []
 
-    (0..MAX_COLUMNS).each { |i|
-      stat_total[i] = growth_str[i] + growth_con[i] + growth_dex[i] + growth_agi[i] + growth_dis[i] +
-        growth_aur[i] + growth_log[i] + growth_int[i] + growth_wis[i] + growth_inf[i]
+    (0..MAX_COLUMNS).each do |i|
+      growth_str = GS4CharacterManager.statsStorage[:str][:growth][i]
+      growth_con = GS4CharacterManager.statsStorage[:con][:growth][i]
+      growth_dex = GS4CharacterManager.statsStorage[:dex][:growth][i]
+      growth_agi = GS4CharacterManager.statsStorage[:agi][:growth][i]
+      growth_dis = GS4CharacterManager.statsStorage[:dis][:growth][i]
+      growth_aur = GS4CharacterManager.statsStorage[:aur][:growth][i]
+      growth_log = GS4CharacterManager.statsStorage[:log][:growth][i]
+      growth_int = GS4CharacterManager.statsStorage[:int][:growth][i]
+      growth_wis = GS4CharacterManager.statsStorage[:wis][:growth][i]
+      growth_inf = GS4CharacterManager.statsStorage[:inf][:growth][i]
+      stat_total[i] = growth_str + growth_con + growth_dex + growth_agi + growth_dis +
+        growth_aur + growth_log + growth_int + growth_wis + growth_inf
 
       # TODO Figure out a way to do this in bulk, instead of inside a loop
-      stat_ptp[i] = character.getPtp_by_stats(growth_aur[i], growth_dis[i], growth_str[i], growth_con[i], growth_dex[i], growth_agi[i])
-      stat_mtp[i] = character.getMtp_by_stats(growth_aur[i], growth_dis[i], growth_log[i], growth_int[i], growth_wis[i], growth_inf[i])
+      stat_ptp[i] = character.getPtp_by_stats(growth_aur, growth_dis, growth_str, growth_con, growth_dex, growth_agi)
+      stat_mtp[i] = character.getMtp_by_stats(growth_aur, growth_dis, growth_log, growth_int, growth_wis, growth_inf)
 
       tot = matrixR.childAtRowCol(11, i)
       ptp = matrixR.childAtRowCol(12, i)
@@ -173,7 +213,7 @@ class StatisticsPage < FXMainWindow
       else
         mtp.backColor = Fox.FXRGB(212, 208, 200)
       end
-    }
+    end
 
   end
 
@@ -199,10 +239,15 @@ class StatisticsPage < FXMainWindow
       sub = matrixL.childAtRowCol(row, 1)
       sub.text = my_bonus.to_s
 
+      myStart = character.getStats.getStat(stat.to_s)
+      recalc_stat_data(character, stat.to_s, myStart)
       update_data_row(stat.to_s, row, character, matrixR)
     end
+
+    update_data_rows(character)
     update_total_rows(character, matrixR)
     update_points_rows(character, matrixR)
+
   end
 
   def update_growth_index(character, matrixL, matrixR)
@@ -214,8 +259,11 @@ class StatisticsPage < FXMainWindow
       sub = matrixL.childAtRowCol(row, 2)
       sub.text = my_growth.to_s
 
+      myStart = character.getStats.getStat(stat.to_s)
+      recalc_stat_data(character, stat.to_s, myStart)
       update_data_row(stat.to_s, row, character, matrixR)
     end
+    update_data_rows(character)
     update_total_rows(character, matrixR)
     update_points_rows(character, matrixR)
   end
@@ -255,16 +303,16 @@ class StatisticsPage < FXMainWindow
     lbl.font = FXFont.new(@app, "Arial", 14)
     createTextField(matrixL, matrixR, my_stat, character)
 
-    growth = character.calcGrowth(my_stat)
-    raceModifier = character.getRaceModifier(my_stat)
-    (0..MAX_COLUMNS).each { |i|
-      bonus = calcBonus(growth[i], raceModifier)
-      lbl = FXLabel.new(matrixR, growth[i].to_s + bonus, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
+    (0..MAX_COLUMNS).each do |index|
+      myText = GS4CharacterManager.statsStorage[my_stat.to_sym][:growth][index].to_s + "  (" +
+        GS4CharacterManager.statsStorage[my_stat.to_sym][:bonus][index].to_s + ")"
+
+      lbl = FXLabel.new(matrixR, myText, :width => 100, :opts => LAYOUT_FIX_WIDTH | FRAME_LINE | LAYOUT_CENTER_Y | LAYOUT_CENTER_X | LAYOUT_FILL_X)
       lbl.borderColor = "White"
       lbl.font = FXFont.new(@app, "Arial", 14)
 
-      lbl.backColor = "Green" if (i > 0 && growth[i - 1] != growth[i])
-    }
+      lbl.backColor = "Green" if (index > 0 && GS4CharacterManager.statsStorage[my_stat.to_sym][:growth][index - 1] != GS4CharacterManager.statsStorage[my_stat.to_sym][:growth][index])
+    end
   end
 
   # This creates the input fields for each stat.  It also does basic validation (integer only), and
@@ -408,17 +456,6 @@ class StatisticsPage < FXMainWindow
     totals = ["Statistics Total", "PTP", "MTP", "Experience until next level", "Total Experience", " "]
     points = ["Health", "Mana", "Stamina", "Spirit"]
 
-    growth_str = character.calcGrowth("str")
-    growth_con = character.calcGrowth("con")
-    growth_dex = character.calcGrowth("dex")
-    growth_agi = character.calcGrowth("agi")
-    growth_dis = character.calcGrowth("dis")
-    growth_aur = character.calcGrowth("aur")
-    growth_log = character.calcGrowth("log")
-    growth_int = character.calcGrowth("int")
-    growth_wis = character.calcGrowth("wis")
-    growth_inf = character.calcGrowth("inf")
-
     # this is the loop that populates the 0..100 arrays
     stat_total = []
     stat_ptp = []
@@ -426,16 +463,27 @@ class StatisticsPage < FXMainWindow
     exp_lvl = []
     total_exp = [0]
 
-    (0..MAX_COLUMNS).each { |i|
-      stat_total[i] = growth_str[i] + growth_con[i] + growth_dex[i] + growth_agi[i] + growth_dis[i] +
-        growth_aur[i] + growth_log[i] + growth_int[i] + growth_wis[i] + growth_inf[i]
+    (0..MAX_COLUMNS).each do |i|
+      growth_str = GS4CharacterManager.statsStorage[:str][:growth][i]
+      growth_con = GS4CharacterManager.statsStorage[:con][:growth][i]
+      growth_dex = GS4CharacterManager.statsStorage[:dex][:growth][i]
+      growth_agi = GS4CharacterManager.statsStorage[:agi][:growth][i]
+      growth_dis = GS4CharacterManager.statsStorage[:dis][:growth][i]
+      growth_aur = GS4CharacterManager.statsStorage[:aur][:growth][i]
+      growth_log = GS4CharacterManager.statsStorage[:log][:growth][i]
+      growth_int = GS4CharacterManager.statsStorage[:int][:growth][i]
+      growth_wis = GS4CharacterManager.statsStorage[:wis][:growth][i]
+      growth_inf = GS4CharacterManager.statsStorage[:inf][:growth][i]
 
-      stat_ptp[i] = character.getPtp_by_stats(growth_aur[i], growth_dis[i], growth_str[i], growth_con[i], growth_dex[i], growth_agi[i])
-      stat_mtp[i] = character.getMtp_by_stats(growth_aur[i], growth_dis[i], growth_log[i], growth_int[i], growth_wis[i], growth_inf[i])
+      stat_total[i] = growth_str + growth_con + growth_dex + growth_agi + growth_dis +
+        growth_aur + growth_log + growth_int + growth_wis + growth_inf
+
+      stat_ptp[i] = character.getPtp_by_stats(growth_aur, growth_dis, growth_str, growth_con, growth_dex, growth_agi)
+      stat_mtp[i] = character.getMtp_by_stats(growth_aur, growth_dis, growth_log, growth_int, growth_wis, growth_inf)
       exp_lvl[i] = character.getExperienceByLevel(i + 1)
 
       total_exp[i] = total_exp[i - 1] + exp_lvl[i] if i > 0
-    }
+    end
 
     totals.each_with_index do |title, idx|
       lbl = FXLabel.new(mat_frame, title, :opts => JUSTIFY_RIGHT | LAYOUT_FILL_X)
@@ -508,4 +556,18 @@ class StatisticsPage < FXMainWindow
     end
   end
 
+  def update_lables(character, matrixL)
+    rows = { str: 1, con: 2, dex: 3, agi: 4, dis: 5, aur: 6, log: 7, int: 8, wis: 9, inf: 10 }
+
+    stats = character.getStats
+    stat_names = stats.getStatNames
+
+    stat_names.each_key do |stat|
+      myText = create_label(stat, character)
+      row = rows[stat.to_sym]
+
+      sub = matrixL.childAtRowCol(row, 0)
+      sub.text = myText
+    end
+  end
 end

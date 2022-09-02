@@ -6,6 +6,7 @@ require "json"
 require "./lib/classes/Race"
 require "./lib/classes/Profession"
 require "./lib/classes/Character"
+require "./lib/classes/Stat"
 
 require "./pages/maneuvers_page"
 require "./pages/skills_page"
@@ -16,6 +17,14 @@ require "./pages/loadout_page"
 require "./pages/progression_page"
 
 class GS4CharacterManager < FXMainWindow
+  @statsStorage = {}
+  @trainingStorage = {}
+
+
+  class <<self
+    attr_accessor :statsStorage
+    attr_accessor :trainingStorage
+  end
 
   def initialize(app)
     character = newCharacter
@@ -34,17 +43,36 @@ class GS4CharacterManager < FXMainWindow
     profession = Profession.new
     character = Character.new
 
-    character.setProfession(profession.getProfessionObjectFromDatabase("Paladin"))
-    character.setRace(race.getRaceObjectFromDatabase("Half Krolvin"))
+    character.setProfession(profession.getProfessionObjectFromDatabase("Bard"))
+    character.setRace(race.getRaceObjectFromDatabase("Erithian"))
+    character.getStats.setStat('str', 68)
+    character.getStats.setStat('con', 70)
+    character.getStats.setStat('dex', 44)
+    character.getStats.setStat('agi', 73)
+    character.getStats.setStat('dis', 75)
+    character.getStats.setStat('aur', 62)
+    character.getStats.setStat('log', 86)
+    character.getStats.setStat('int', 82)
+    character.getStats.setStat('wis', 67)
+    character.getStats.setStat('inf', 33)
 
-    # character.addTraining(training.addTrainingSkill(
-    #   dialog.skill_attr[:skill_name].value,
-    #   dialog.skill_attr[:cost].value,
-    #   dialog.skill_attr[:goal].value,
-    #   dialog.skill_attr[:start].value,
-    #   dialog.skill_attr[:target].value)
-    # )
+    stats = character.getStats
+    stat_names = stats.getStatNames
 
+    stat_names.each_key do |stat|
+      professionGrowth = character.getProfession[:growth].getStats[stat]
+      raceAdjust = character.getRace[:adjust].getStats[stat]
+      growth_interval = professionGrowth + raceAdjust
+
+      raceModifier = character.getRace[:bonus].getStats[stat]
+
+      myStart = character.getStats.getStat(stat.to_s)
+
+      storeIt = Stat.new(stat, myStart, growth_interval, raceModifier)
+      growth = storeIt.calcGrowth
+
+      GS4CharacterManager.statsStorage[stat] = growth
+    end
 
     return character
   end
@@ -97,7 +125,6 @@ class GS4CharacterManager < FXMainWindow
   def construct_stats_page(page, character)
     statistics = StatisticsPage.new(app)
     statistics.show_page(page, character)
-    puts character.inspect
   end
 
   # Stub for Skills page tab

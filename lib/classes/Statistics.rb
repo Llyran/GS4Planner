@@ -1,20 +1,9 @@
+# require "./lib/classes/Stat"
+
 class Statistics
 
   def initialize
-    createStats
-  end
-
-  def createStats
-    @str = 0
-    @con = 0
-    @dex = 0
-    @agi = 0
-    @dis = 0
-    @aur = 0
-    @log = 0
-    @int = 0
-    @wis = 0
-    @inf = 0
+    createDefaultStats
   end
 
   def createDefaultStats
@@ -199,7 +188,7 @@ class Statistics
   end
 
   def resetStats
-    createStats
+    createDefaultStats
   end
 
   def getStatTotal
