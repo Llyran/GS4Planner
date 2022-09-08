@@ -185,7 +185,7 @@ class Character
   end
 
   def getRaceModifier(stat)
-   getRace[:bonus].getStat(stat)
+    getRace[:bonus].getStat(stat)
   end
 
   def getStatBonus(stat)
@@ -203,9 +203,9 @@ class Character
     con = calcGrowth("con")
     gain = { Aelotoi: 5, "Burgal Gnome": 4, "Dark Elf": 5, Dwarf: 6, Elf: 5, Erithian: 5, "Forest Gnome": 4,
              Giantman: 7, "Half Elf": 5, "Half Krolvin": 6, Halfling: 4, Human: 6, Sylviankind: 5 }
-    (0..100).each do |i|
+    (0..100).each { |i|
       base[i] = (str[i] + con[i]) / 10
-    end
+    }
 
     return base
   end
@@ -228,9 +228,9 @@ class Character
   def calcSpirit()
     aur = []
     my_aur = calcGrowth("aur")
-    (0..100).each do |i|
+    (0..100).each { |i|
       aur[i] = (my_aur[i] / 10.0).round
-    end
+    }
 
     return aur
   end
@@ -306,18 +306,17 @@ class Character
     myCharacters = []
     my_string = ""
     results = db.query "SELECT name from Characters"
-    results.each do |row|
+    results.each { |row|
       myCharacters.push(row['name'])
       my_string += row['name'] + " "
-    end
+    }
 
     return my_string
   end
 
   def addTraining(training)
-    puts training.inspect
     @training.append(training)
-    puts @training.inspect
+    # puts @training.inspect
   end
 
   def getTraining()

@@ -20,8 +20,7 @@ class GS4CharacterManager < FXMainWindow
   @statsStorage = {}
   @trainingStorage = {}
 
-
-  class <<self
+  class << self
     attr_accessor :statsStorage
     attr_accessor :trainingStorage
   end
@@ -56,10 +55,29 @@ class GS4CharacterManager < FXMainWindow
     character.getStats.setStat('wis', 67)
     character.getStats.setStat('inf', 33)
 
+    [
+      { :skill_name => "Ranged Weapons", :goal => "2x ", :cost => "4 / 2 (2)", :start => 0, :target => 100, :order => 1 },
+      { :skill_name => "Armor Use", :goal => "1.35x ", :cost => "5 / 0 (2)", :start => 0, :target => 100, :order => 2 },
+      { :skill_name => "Physical Fitness", :goal => "1x ", :cost => "4 / 0 (2)", :start => 0, :target => 100, :order => 3 },
+      { :skill_name => "Dodging", :goal => "1x ", :cost => "6 / 6 (2)", :start => 0, :target => 100, :order => 4 },
+      { :skill_name => "Harness Power", :goal => "1x ", :cost => "0 / 5 (2)", :start => 0, :target => 100, :order => 5 },
+      { :skill_name => "Perception", :goal => "2x ", :cost => "0 / 3 (2)", :start => 0, :target => 100, :order => 6 },
+      { :skill_name => "Spell Research, Bard", :goal => "1x ", :cost => "0 / 17 (2)", :start => 0, :target => 24, :order => 7 },
+      { :skill_name => "Multi Opponent Combat", :goal => "1x ", :cost => "7 / 3 (1)", :start => 1, :target => 10, :order => 8 },
+      { :skill_name => "Mental Lore, Telepathy", :goal => "1x ", :cost => "0 / 8 (1)", :start => 3, :target => 27, :order => 9 },
+      { :skill_name => "Climbing", :goal => "0.5x ", :cost => "3 / 0 (2)", :start => 0, :target => 100, :order => 10 },
+      { :skill_name => "Swimming", :goal => "0.25x ", :cost => "3 / 0 (2)", :start => 0, :target => 100, :order => 11 },
+      { :skill_name => "First Aid", :goal => "0.5x ", :cost => "2 / 1 (2)", :start => 0, :target => 100, :order => 12 },
+      { :skill_name => "Survival", :goal => "0.25x ", :cost => "2 / 2 (2)", :start => 0, :target => 100, :order => 13 },
+      { :skill_name => "Elemental Lore, Air", :goal => "1x ", :cost => "0 / 8 (1)", :start => 35, :target => 100, :order => 14 }
+    ].each { |skill|
+      character.addTraining(skill)
+    }
+
     stats = character.getStats
     stat_names = stats.getStatNames
 
-    stat_names.each_key do |stat|
+    stat_names.each_key { |stat|
       professionGrowth = character.getProfession[:growth].getStats[stat]
       raceAdjust = character.getRace[:adjust].getStats[stat]
       growth_interval = professionGrowth + raceAdjust
@@ -72,7 +90,7 @@ class GS4CharacterManager < FXMainWindow
       growth = storeIt.calcGrowth
 
       GS4CharacterManager.statsStorage[stat] = growth
-    end
+    }
 
     return character
   end

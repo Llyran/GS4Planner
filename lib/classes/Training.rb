@@ -7,17 +7,21 @@ class Training
     createDatabaseTable
   end
 
-  def addTrainingSkill(skill_name, cost, goal, start, target)
+  def addTrainingSkill(skill_name, cost, goal, start, target, order)
 
     @skill_name = skill_name
     @goal = goal
     @cost = cost
     @start = start
     @target = target
+    @order = order
   end
 
   def getTraining
-    return { skill_name: @skill_name, goal: @goal, cost: @cost, start: @start, target: @target }
+    return { skill_name: @skill_name, goal: @goal, cost: @cost, start: @start, target: @target, order: @order }
+  end
+  def setName(name)
+    @skill_name = name
   end
 
   def setGoal(goal)
@@ -33,12 +37,24 @@ class Training
     @target = target
   end
 
+  def setOrder(order)
+    @order = order
+  end
+
   def getSkill
     @skill
   end
 
+  def getName
+    @skill_name
+  end
+
   def getGoal
     @goal
+  end
+
+  def getCost
+    @cost
   end
 
   def getStart
@@ -49,8 +65,8 @@ class Training
     @target
   end
 
-  def getCost
-    @cost
+  def getOrder
+    @order
   end
 
   def getTrainingCost(skill, profession)

@@ -178,9 +178,9 @@ class Skills
     mySkills = []
 
     results = db.query "select Name from Skills JOIN Training on Skills.name = Training.skill AND Profession = ? ORDER BY type, subskill_group, name", profession
-    results.each do |row|
+    results.each { |row|
       mySkills.push(row['name'])
-    end
+    }
 
     return mySkills
   end
