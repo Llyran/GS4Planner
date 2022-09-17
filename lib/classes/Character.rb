@@ -10,13 +10,13 @@ class Character
     createDatabaseTable
 
     @stats = Statistics.new
-    @stats.createDefaultStats()
+    @stats.createDefaultStats
     # global statistics;
     @name = ""
     # Statistics Panel variables
     @race = ""
     @profession = ""
-    @training = []
+    @training = {}
 
     # @race_list = {}; # Contains a list of Race objects using the name of each race name as a key
     # @profession_list = {}; # Contains a list of Profession objects using the name of each profession name as a key
@@ -149,7 +149,7 @@ class Character
   end
 
   def getPTP
-    ptp_sum = getPtp_by_stats(@stats.getAur(), @stats.getDis(), @stats.getStr(), @stats.getCon(), @stats.getDex(), @stats.getAgi())
+    ptp_sum = getPtp_by_stats(@stats.getAur, @stats.getDis, @stats.getStr, @stats.getCon, @stats.getDex, @stats.getAgi)
     return ptp_sum
   end
 
@@ -171,7 +171,7 @@ class Character
   end
 
   def getMTP
-    mtp_sum = getPtp_by_stats(@stats.getAur(), @stats.getDis(), @stats.getLog(), @stats.getInt(), @stats.getWis(), @stats.getInf())
+    mtp_sum = getPtp_by_stats(@stats.getAur, @stats.getDis, @stats.getLog, @stats.getInt, @stats.getWis, @stats.getInf)
     return mtp_sum
   end
 
@@ -236,7 +236,7 @@ class Character
   end
 
   def calcGrowth(stat)
-    myStats = Array.new()
+    myStats = Array.new
 
     myStart = @stats.getStat(stat)
     growth_interval = getGrowthIndex(stat)
@@ -315,7 +315,8 @@ class Character
   end
 
   def addTraining(training)
-    @training.append(training)
+    @training[@training.length + 1] = training
+    # @training.append(training)
     # puts @training.inspect
   end
 
@@ -330,8 +331,6 @@ class Character
   # def update_skills() end
   #
   # def calculate_subskill_regained_tp(level, subskill_group) end
-  #
-  # def get_total_ranks_of_subskill(name, level, subskill_group) end
   #
   # def get_total_postcap_ranks_of_subskill(name, interval, subskill_group) end
   #

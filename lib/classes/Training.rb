@@ -7,18 +7,21 @@ class Training
     createDatabaseTable
   end
 
-  def addTrainingSkill(skill_name, cost, goal, start, target, order)
+  def addTrainingSkill(skill_name, cost, goal, range_start, range_end)
 
     @skill_name = skill_name
     @goal = goal
     @cost = cost
-    @start = start
-    @target = target
-    @order = order
+    @range_start = range_start
+    @range_end = range_end
+  end
+
+  def deleteTrainingSkillByIndex(idx)
+
   end
 
   def getTraining
-    return { skill_name: @skill_name, goal: @goal, cost: @cost, start: @start, target: @target, order: @order }
+    return { skill_name: @skill_name, goal: @goal, cost: @cost, range_start: @range_start, range_end: @range_end }
   end
   def setName(name)
     @skill_name = name
@@ -32,13 +35,9 @@ class Training
     @cost = cost
   end
 
-  def setTraining(start, target)
-    @start = start
-    @target = target
-  end
-
-  def setOrder(order)
-    @order = order
+  def setTraining(range_start, range_end)
+    @range_start = range_start
+    @range_end = range_end
   end
 
   def getSkill
@@ -57,16 +56,12 @@ class Training
     @cost
   end
 
-  def getStart
-    @start
+  def getRangeStart
+    @range_start
   end
 
-  def getTarget
-    @target
-  end
-
-  def getOrder
-    @order
+  def getRangeEnd
+    @range_end
   end
 
   def getTrainingCost(skill, profession)
